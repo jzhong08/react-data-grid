@@ -1,8 +1,10 @@
-import React, {PropTypes, Component} from 'react';
+import React, { PropTypes, Component } from 'react';
+import Toolbar from './Toolbar';
 import '../../../../themes/react-data-grid-toolbar.css';
 
 const propTypes = {
-  children: PropTypes.array
+    children: PropTypes.array,
+    onToggleFilter: React.PropTypes.func
 };
 
 const defaultProps = {
@@ -15,7 +17,7 @@ class AdvancedToolbar extends Component {
       <div className="react-grid-Toolbar">
         {this.props.children}
         <div className="tools">
-
+          <Toolbar enableFilter={true} onToggleFilter={this.props.onToggleFilter} />
         </div>
       </div>);
   }

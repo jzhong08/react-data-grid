@@ -22,7 +22,7 @@ const Toolbar = React.createClass({
     return {
       enableAddRow: true,
       addRowButtonText: 'Add Row',
-      filterRowsButtonText: 'Filter Rows'
+      filterRowsButtonText: 'Filter'
     };
   },
 

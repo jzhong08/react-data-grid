@@ -2,6 +2,7 @@ import 'react-select/dist/react-select.css';
 import React, {PropTypes} from 'react';
 import Select from 'react-select';
 import { utils, shapes } from 'react-data-grid';
+
 const { isEmptyArray } = utils;
 const { ExcelColumn } = shapes;
 
@@ -11,7 +12,7 @@ class AutoCompleteFilter extends React.Component {
     this.getOptions = this.getOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.filterValues = this.filterValues.bind(this);
-    this.state = {options: this.getOptions(), rawValue: '', placeholder: 'Search'};
+    this.state = {options: this.getOptions(), rawValue: '', placeholder: 'Search1'};
   }
 
   componentWillReceiveProps(newProps) {

@@ -3,13 +3,16 @@ let size;
 function getScrollbarSize() {
   if (size === undefined) {
     let outer = document.createElement('div');
-    outer.style.width = '50px';
-    outer.style.height = '50px';
+    //outer.style.width = '50px';
+	outer.style.width = '50px';
+    //outer.style.height = '50px';
+	outer.style.height = '50px';
     outer.style.position = 'absolute';
     outer.style.top = '-200px';
     outer.style.left = '-200px';
 
     let inner = document.createElement('div');
+	//inner.style.height = '100px';
     inner.style.height = '100px';
     inner.style.width = '100%';
 

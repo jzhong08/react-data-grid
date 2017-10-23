@@ -74,9 +74,9 @@ const  DefaultRowGroupRenderer = (props) => {
   let marginLeft = treeDepth * 20;
 
   let style = {
-    height: '50px',
+    height: '22px',
     border: '1px solid #dddddd',
-    paddingTop: '15px',
+    paddingTop: '2px',
     paddingLeft: '5px'
   };
 
@@ -94,7 +94,7 @@ const  DefaultRowGroupRenderer = (props) => {
   return (
     <div style={style} onKeyDown={onKeyDown} tabIndex={0}>
       <span className="row-expand-icon" style={{float: 'left', marginLeft: marginLeft, cursor: 'pointer'}} onClick={props.onRowExpandClick} >{props.isExpanded ? String.fromCharCode('9660') : String.fromCharCode('9658')}</span>
-      <strong>{props.columnGroupName}: {props.name}</strong>
+      <span style={{ fontSize: '11px', fontWeight: '700' }}>{props.columnGroupName} - {props.name}</span>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 .react-grid-Row:hover .react-grid-Cell,
 .react-grid-Row.row-context-menu .react-grid-Cell {
-  background-color: #f9f9f9;
+  background-color: #d8d8d8;
 }
 
 .react-grid-Row:hover .rdg-row-index {
@@ -23,12 +23,20 @@
   background-repeat: no-repeat;
 }
 
-.react-grid-Row.row-selected{
- background-color: #DBECFA;
+.react-grid-Row.row-selected {
+  background-color: #DBECFA;
 }
 
-.react-grid-Row .row-selected{
- background-color: #DBECFA;
+.react-grid-Row .row-selected {
+  background-color: #DBECFA;
+}
+
+.react-grid-Row--odd {
+  background-color: #e8e8e8;
+}
+
+.react-grid-Row--even {
+  background-color: #ffffff;
 }
 
 .react-grid-row-group .row-expand-icon:hover {

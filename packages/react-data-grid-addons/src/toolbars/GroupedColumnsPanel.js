@@ -16,7 +16,7 @@ const propTypes = {
 
 const defaultProps = {
   noColumnsSelectedMessage: 'Drag a column header here to group by that column',
-  panelDescription: 'Drag a column header here to group by that column'
+  panelDescription: 'More column header'
 };
 
 class GroupedColumnsPanel extends Component {
@@ -59,8 +59,8 @@ class GroupedColumnsPanel extends Component {
   render() {
     const { connectDropTarget, isOver, canDrop} = this.props;
     return connectDropTarget(
-      <div style={{ padding: '2px', position: 'relative', margin: '-10px', display: 'inline-block', border: '1px solid #eee' }}>
-        {this.renderGroupedColumns()} <span>{this.getPanelInstructionMessage()}</span>
+      <div style={{ padding: '0px', position: 'relative', margin: '-10px', display: 'inline-block', border: '1px solid #eee' }}>
+            {this.renderGroupedColumns()} <span style={{ fontSize: '11px'}}>{this.getPanelInstructionMessage()}</span>
         {isOver && canDrop && this.renderOverlay('yellow')}
         {!isOver && canDrop && this.renderOverlay('#DBECFA')}
       </div>);

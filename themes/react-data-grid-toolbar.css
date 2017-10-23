@@ -1,31 +1,35 @@
 .react-grid-Toolbar {
-  background-color: #ffffff;
+  //background-color: #ffffff;
   border-color: #e7eaec;
   border-image: none;
-  border-style: solid solid none;
+  border-style: none;
   border-width: 1px 1px 1px 1px;
   color: inherit;
   margin-bottom: 0;
-  padding: 14px 15px 7px;
-  height: 48px;
+  padding: 8px 9px 4px;
+  //padding: 14px 15px 7px;
+  height: 20px;
+  //height: 48px;
 }
 .react-grid-Toolbar .btn {
-  display: inline-block;
-  padding: 6px 12px;
-  margin-bottom: 0;
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.42857143;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
-  cursor: pointer;
-  -webkit-user-select: none;
-  color: inherit;
-  background: white;
-  border: 1px solid #e7eaec;
+    display: inline-block;
+    padding: 1px 2px;
+    //padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 11px;
+    //font-size: 14px;
+    font-weight: 700;
+    line-height: 1.42857143;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    -ms-touch-action: manipulation;
+    touch-action: manipulation;
+    cursor: pointer;
+    -webkit-user-select: none;
+    color: white;
+    background: #428bca;
+    border: 1px solid #e7eaec;
 }
 .react-grid-Toolbar .btn:hover {
   color: inherit;
@@ -44,5 +48,5 @@
   margin-top: 0;
   position: relative;
   padding: 0;
-  margin-top: -6px;
+  margin-top: -10px;
 }

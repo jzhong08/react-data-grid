@@ -1,7 +1,7 @@
 .react-grid-Cell {
-  background-color: #ffffff;
-  padding-left: 8px;
-  padding-right: 8px;
+  background-color: transparent;
+  padding-left: 1px;
+  padding-right: 1px;
   border-right: 1px solid #eee;
   border-bottom: 1px solid #dddddd;
 }

@@ -1,3 +1,13 @@
+.react-grid-Header-input-xs {
+    height: 20px;
+    padding: 1px 1px;
+    font-family: Arial;
+    font-size: 11px;
+    font-weight: normal;
+    line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
+    border-radius: 3px;
+}
+
 .react-grid-Header {
   box-shadow: 0px 0px 4px 0px #dddddd;
   background: #f9f9f9;
@@ -16,9 +26,12 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  background: #f9f9f9;
-  padding: 8px;
-  font-weight: bold;
+  background: #c8c8c8;
+  padding: 1px;
+  font-weight: 600;
+  font-size: 11px;
+  font-family: Arial;
+  text-align: center;
   border-right: 1px solid #dddddd;
   border-bottom: 1px solid #dddddd;
 }
@@ -48,13 +61,14 @@
 }
 
 .react-grid-HeaderCell .Select {
-    max-height: 30px;
-    font-size: 12px;
+    max-height: 18px;
+    font-size: 11px;
+    font-family: Arial;
     font-weight: normal;
 }
 
 .react-grid-HeaderCell .Select-control {
-    max-height: 30px;
+    max-height: 18px;
     border: 1px solid #cccccc;
     color: #555;
     border-radius: 3px;
@@ -68,19 +82,19 @@
 }
 
 .react-grid-HeaderCell .Select-control .Select-placeholder {
-    line-height: 20px;
+    line-height: 16px;
     color: #999;
-    padding: 4px;
+    padding: 1px;
 }
 
 .react-grid-HeaderCell .Select-control .Select-input {
-    max-height: 28px;
-    padding: 4px;
+    max-height: 18px;
+    padding: 1px;
     margin-left: 0px
 }
 
 .react-grid-HeaderCell .Select-control .Select-input input {
-    padding: 0px;
+    padding: 1px;
     height: 100%;
 }
 
@@ -91,8 +105,8 @@
 
 
 .react-grid-HeaderCell .Select-control .Select-value {
-    padding: 4px;
-    line-height: 20px !important;   
+    padding: 1px;
+    line-height: 16px !important;   
 }
 
 .react-grid-HeaderCell .Select--multi .Select-control .Select-value {
@@ -102,11 +116,11 @@
 }
 
 .react-grid-HeaderCell .Select--multi .Select-control .Select-value .Select-value-icon {
-    max-height: 20px;
+    max-height: 18px;
 }
 
 .react-grid-HeaderCell .Select--multi .Select-control .Select-value .Select-value-label {
-    max-height: 20px;
+    max-height: 18px;
 }
 
 .react-grid-HeaderCell .Select-control .Select-value .Select-value-label {
@@ -114,8 +128,8 @@
 }
 
 .react-grid-HeaderCell .Select-menu-outer .Select-option {
-    padding: 4px;
-    line-height: 20px;
+    padding: 1px;
+    line-height: 16px;
 }
 
 .react-grid-HeaderCell .Select-menu-outer .Select-menu .Select-option.is-selected {

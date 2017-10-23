@@ -1,5 +1,6 @@
 const React              = require('react');
-const ExcelColumn        = require('../../PropTypeShapes/ExcelColumn');
+const ExcelColumn = require('../../PropTypeShapes/ExcelColumn');
+require('../../../../../themes/react-data-grid-header.css');
 
 const FilterableHeaderCell = React.createClass({
 
@@ -24,7 +25,7 @@ const FilterableHeaderCell = React.createClass({
     }
 
     let inputKey = 'header-filter-' + this.props.column.key;
-    return (<input key={inputKey} type="text" className="form-control input-sm" placeholder="Search" value={this.state.filterTerm} onChange={this.handleChange}/>);
+    return(<input key={ inputKey } type="text" className="form-control react-grid-Header-input-xs" placeholder="Search2" value={this.state.filterTerm} onChange={this.handleChange}/>);
   },
 
   render: function(): ?ReactElement {

@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 
 const SimpleRowsContainer = (props) => {
+    let divStyle = { fontFamily: 'Arial', fontWeight: 600 };
   return (
-    <div key="rows-container">
+    <div key="rows-container" style={divStyle}>
       {props.rows}
     </div>
   );

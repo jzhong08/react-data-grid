@@ -163,7 +163,7 @@ const Header = React.createClass({
       height += this.props.headerRows[index].height || this.props.height;
     }
     return height;
-  },
+},
 
   getStyle(): {position: string; height: number} {
     return {
@@ -199,10 +199,10 @@ const Header = React.createClass({
     });
     let headerRows = this.getHeaderRows();
 
-    return (
+    return(
       <div {...this.getKnownDivProps()} style={this.getStyle()} className={className} onClick={this.onHeaderClick}>
         {headerRows}
-      </div>
+      </div >
     );
   }
 });
