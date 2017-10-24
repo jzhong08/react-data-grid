@@ -12,7 +12,9 @@ class AutoCompleteFilter extends React.Component {
     this.getOptions = this.getOptions.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.filterValues = this.filterValues.bind(this);
-    this.state = {options: this.getOptions(), rawValue: '', placeholder: 'Search1'};
+    //this.state = { options: this.getOptions(), rawValue: '', placeholder: 'Select...' };
+    this.placeholder = React.createElement('div', { style: { textAlign: 'left', fontStyle: 'italic' } }, 'Select...');
+    this.state = { options: this.getOptions(), rawValue: '', placeholder: this.placeholder };
   }
 
   componentWillReceiveProps(newProps) {
@@ -24,7 +26,7 @@ class AutoCompleteFilter extends React.Component {
     let options = props.getValidFilterValues(props.column.key);
     options = options.map(o => {
       if (typeof o === 'string') {
-        return { value: o, label: o };
+        return { value: o, label: o, style: { textAlign: 'left' } };
       }
       return o;
     });
