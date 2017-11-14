@@ -1,0 +1,18 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\packages",
+    "\\packages\\react-data-grid",
+    "\\packages\\react-data-grid-addons",
+    "\\packages\\react-data-grid-addons\\src",
+    "\\packages\\react-data-grid-addons\\src\\cells\\headerCells",
+    "\\packages\\react-data-grid-addons\\src\\cells\\headerCells\\filters",
+    "\\packages\\react-data-grid-addons\\src\\toolbars",
+    "\\packages\\react-data-grid\\src",
+    "\\packages\\react-data-grid\\src\\cells",
+    "\\packages\\react-data-grid\\src\\cells\\headerCells",
+    "\\themes"
+  ],
+  "SelectedNode": "\\packages\\react-data-grid\\src\\Cell.js",
+  "PreviewInSolutionExplorer": false
+}

@@ -10,25 +10,26 @@ class RowGrouper {
     this.resolver = new Resolver(isImmutable);
   }
 
-  isRowExpanded(columnName, name) {
+  isRowExpanded(columnKey, key) {
     let isExpanded = true;
-    let expandedRowGroup = this.expandedRows[columnName];
-    if (expandedRowGroup && expandedRowGroup[name]) {
-      isExpanded = expandedRowGroup[name].isExpanded;
+    let expandedRowGroup = this.expandedRows[columnKey];
+    if (expandedRowGroup && expandedRowGroup[key]) {
+      isExpanded = expandedRowGroup[key].isExpanded;
     }
     return isExpanded;
   }
 
   groupRowsByColumn(rows, columnIndex = 0) {
     let nextColumnIndex = columnIndex;
-    let columnName = this.columns.length > 0 && typeof this.columns[columnIndex] === 'string' ? this.columns[columnIndex] : this.columns[columnIndex].key;
-    let groupedRows = this.resolver.getGroupedRows(rows, columnName);
+    let columnKey = this.columns.length > 0 && typeof this.columns[columnIndex] === 'string' ? this.columns[columnIndex] : this.columns[columnIndex].key;
+    let columnName = this.columns.length > 0 && typeof this.columns[columnIndex] === 'string' ? this.columns[columnIndex] : this.columns[columnIndex].name;
+    let groupedRows = this.resolver.getGroupedRows(rows, columnKey);
     let keys = this.resolver.getGroupKeys(groupedRows);
     let dataviewRows = this.resolver.initRowsCollection();
 
     for (let i = 0; i < keys.length; i++) {
       let key = keys[i];
-      let isExpanded = this.isRowExpanded(columnName, key);
+      let isExpanded = this.isRowExpanded(columnKey, key);
       let rowGroupHeader = {name: key, __metaData: {isGroup: true, treeDepth: columnIndex, isExpanded: isExpanded, columnGroupName: columnName}};
 
       dataviewRows = this.resolver.addHeaderRow(rowGroupHeader, dataviewRows);
