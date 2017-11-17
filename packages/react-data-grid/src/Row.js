@@ -89,9 +89,11 @@ const Row = React.createClass({
     }
 
     const { row, isSelected } = this.props;
+	let cellTooltip = this.getCellValue(key+'_tooltip' || i);
     const cellProps = {
       ref: (node) => this[key] = node,
       value: this.getCellValue(key || i),
+      tooltip: cellTooltip ? cellTooltip.toString() : "",
       rowData: row,
       isRowSelected: isSelected,
       expandableOptions: this.getExpandableOptions(key),

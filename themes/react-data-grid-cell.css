@@ -146,35 +146,36 @@
 
 .cell-tooltip .cell-tooltip-text {
     visibility: hidden;
-    width: 150px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
+    background-color: #00ced1;
+    color: #483d8b;
+    text-align: left;
+    font-size: 11px;
     border-radius: 6px;
-    padding: 5px 0;
+    padding: 2px 4px;
     position: absolute;
     z-index: 1;
-    bottom: -150%;
-    left: 50%;
-    margin-left: -60px;
+    top: 100%;
+    left: 0px;
+    margin-left: 0px;
     /* Fade in tooltip - takes 1 second to go from 0% to 100% opacity */
-    opacity: 1s;
+    transition: opacity 1s;
 }
 
 .cell-tooltip:hover .cell-tooltip-text {
     visibility: visible;
-    opacity: 0.8;
+    opacity: 1.0;
 }
 
+/* Create the triangle anchor stickout pointing from tooltip to the cell*/
 .cell-tooltip .cell-tooltip-text::after {
     content: " ";
     position: absolute;
-    bottom: 100%;  /* At the top of the tooltip */
-    left: 50%;
+    bottom: 98%; /* At the top of the tooltip */
+    left: 10%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent transparent black transparent;
+    border-color: transparent transparent #00ced1 transparent;
 }
 
 .react-grid-Canvas.opaque .react-grid-Cell.cell-tooltip:hover .cell-tooltip-text {
