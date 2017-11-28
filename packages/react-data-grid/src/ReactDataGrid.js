@@ -547,17 +547,21 @@ const ReactDataGrid = React.createClass({
         this.handleNewRowSelect(rowIdx, rowData);
       }
     } else { // Fallback to old onRowSelect handler
-      let selectedRows = this.props.enableRowSelect === 'single' ? [] : this.state.selectedRows.slice(0);
+	  let selectedRows = this.state.selectedRows.slice(0);
       let selectedRow = this.getSelectedRow(selectedRows, rowData[this.props.rowKey]);
       if (selectedRow) {
         selectedRow.isSelected = !selectedRow.isSelected;
       } else {
+		if (this.props.enableRowSelect === 'single') {
+	      selectedRows = [];
+		}
         rowData.isSelected = true;
         selectedRows.push(rowData);
       }
       this.setState({selectedRows: selectedRows, selected: {rowIdx: rowIdx, idx: 0}});
       if (this.props.onRowSelect) {
-        this.props.onRowSelect(selectedRows.filter(r => r.isSelected === true));
+		let filteredRows = selectedRows.filter(r => r.isSelected === true);
+        this.props.onRowSelect(filteredRows);
       }
     }
   },
@@ -841,7 +845,7 @@ const ReactDataGrid = React.createClass({
     this._cachedColumns = columns;
 
     let cols = columns.slice(0);
-    let unshiftedCols = {};
+    let newCols = {};
     if (this.props.rowActionsCell || (props.enableRowSelect && !this.props.rowSelection) || (props.rowSelection && props.rowSelection.showCheckbox !== false)) {
       let headerRenderer = props.enableRowSelect === 'single' ? null :
       <div className="react-grid-checkbox-container checkbox-align">
@@ -861,8 +865,8 @@ const ReactDataGrid = React.createClass({
         getRowMetaData: (rowData) => rowData,
         cellClass: this.props.rowActionsCell ? 'rdg-row-actions-cell' : ''
       };
-      unshiftedCols = cols.unshift(selectColumn);
-      cols = unshiftedCols > 0 ? cols : unshiftedCols;
+      let newCols = cols.unshift(selectColumn);
+      cols = newCols > 0 ? cols : newCols;
     }
     this._cachedComputedColumns = cols;
 

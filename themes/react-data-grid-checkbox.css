@@ -16,17 +16,17 @@
 .react-grid-checkbox + .react-grid-checkbox-label:before, .radio-custom + .radio-custom-label:before {
     content: '';
     background: #fff;
-    border: 2px solid #ddd;
+    border: 1px solid #ddd;
     display: inline-block;
     vertical-align: middle;
-    width: 20px;
-    height: 20px;
+    width: 12px;
+    height: 12px;
     text-align: center;
 }
 
 .react-grid-checkbox:checked + .react-grid-checkbox-label:before {
     background: #005295;
-    box-shadow: inset 0px 0px 0px 4px #fff;
+    box-shadow: inset 0px 0px 0px 1px #fff;
 }
 
 .react-grid-checkbox:focus + .react-grid-checkbox-label, .radio-custom:focus + .radio-custom-label {
@@ -54,7 +54,7 @@
 
 .radio-custom:checked + .radio-custom-label:before {
     background: #ccc;
-    box-shadow: inset 0px 0px 0px 4px #fff;
+    box-shadow: inset 0px 0px 0px 1px #fff;
 }
 
 .checkbox-align {
