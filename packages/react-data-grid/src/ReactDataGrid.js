@@ -5,7 +5,7 @@ const Row                   = require('./Row');
 const ExcelColumn           = require('./PropTypeShapes/ExcelColumn');
 const KeyboardHandlerMixin  = require('./KeyboardHandlerMixin');
 const CheckboxEditor        = require('./editors/CheckboxEditor');
-const DOMMetrics           = require('./DOMMetrics');
+//const DOMMetrics           = require('./DOMMetrics');
 const ColumnMetricsMixin      = require('./ColumnMetricsMixin');
 const RowUtils = require('./RowUtils');
 const ColumnUtils = require('./ColumnUtils');
@@ -46,7 +46,7 @@ const ReactDataGrid = React.createClass({
 
   mixins: [
     ColumnMetricsMixin,
-    DOMMetrics.MetricsComputatorMixin,
+    //DOMMetrics.MetricsComputatorMixin,
     KeyboardHandlerMixin
   ],
 

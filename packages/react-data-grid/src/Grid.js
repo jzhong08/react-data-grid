@@ -3,7 +3,7 @@ const PropTypes            = React.PropTypes;
 const Header               = require('./Header');
 const Viewport             = require('./Viewport');
 const GridScrollMixin      = require('./GridScrollMixin');
-const DOMMetrics           = require('./DOMMetrics');
+//const DOMMetrics           = require('./DOMMetrics');
 const cellMetaDataShape    = require('./PropTypeShapes/CellMetaDataShape');
 require('../../../themes/react-data-grid-core.css');
 
@@ -60,7 +60,7 @@ const Grid = React.createClass({
 
   mixins: [
     GridScrollMixin,
-    DOMMetrics.MetricsComputatorMixin
+    //DOMMetrics.MetricsComputatorMixin
   ],
 
   getDefaultProps() {

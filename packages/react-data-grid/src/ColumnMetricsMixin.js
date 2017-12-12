@@ -19,7 +19,10 @@ type ColumnMetricsType = {
 };
 
 module.exports = {
-  mixins: [DOMMetrics.MetricsMixin],
+  mixins: [
+    DOMMetrics.MetricsComputatorMixin,
+    DOMMetrics.MetricsMixin
+  ],
 
   propTypes: {
     columns: PropTypes.arrayOf(Column),

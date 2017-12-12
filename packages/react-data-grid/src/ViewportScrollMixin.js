@@ -16,7 +16,10 @@ type ViewportScrollState = {
 };
 
 module.exports = {
-  mixins: [DOMMetrics.MetricsMixin],
+  mixins: [
+  	DOMMetrics.MetricsComputatorMixin,
+    DOMMetrics.MetricsMixin
+  ],
 
   DOMMetrics: {
     viewportHeight(): number {
