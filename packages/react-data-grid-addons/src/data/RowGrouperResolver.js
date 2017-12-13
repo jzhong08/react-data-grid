@@ -14,8 +14,8 @@ export default class RowGrouperResolver {
     return this.isImmutable ? new List() : [];
   }
 
-  getGroupedRows(rows, columnName) {
-    return this.isImmutable ? rows.groupBy(x => isImmutableMap(x) ? x.get(columnName) : x[columnName]) : groupBy(rows, columnName);
+  getGroupedRows(rows, columnKey) {
+    return this.isImmutable ? rows.groupBy(x => isImmutableMap(x) ? x.get(columnKey) : x[columnKey]) : groupBy(rows, columnKey);
   }
 
   getGroupKeys(groupedRows) {
