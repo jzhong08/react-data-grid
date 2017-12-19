@@ -468,9 +468,9 @@ const ReactDataGrid = React.createClass({
     }
   },
 
-  useNewRowSelection() {
-    return this.props.rowSelection && this.props.rowSelection.selectBy;
-  },
+//  useNewRowSelection() {
+//    return this.props.rowSelection && this.props.rowSelection.selectBy;
+//  },
   // return false if not a shift select so can be handled as normal row selection
   handleShiftSelect(rowIdx) {
     if (this.state.lastRowIdxUiSelected > -1 && this.isSingleKeyDown(KeyCodes.Shift)) {
@@ -538,15 +538,15 @@ const ReactDataGrid = React.createClass({
   handleRowSelect(rowIdx: number, columnKey: string, rowData, e: Event) {
     e.stopPropagation();
 
-    if (this.useNewRowSelection()) {
-      if (this.props.rowSelection.enableShiftSelect === true) {
-        if (!this.handleShiftSelect(rowIdx)) {
-          this.handleNewRowSelect(rowIdx, rowData);
-        }
-      } else {
-        this.handleNewRowSelect(rowIdx, rowData);
-      }
-    } else { // Fallback to old onRowSelect handler
+    //if (this.useNewRowSelection()) {
+    //  if (this.props.rowSelection.enableShiftSelect === true) {
+    //    if (!this.handleShiftSelect(rowIdx)) {
+    //      this.handleNewRowSelect(rowIdx, rowData);
+    //    }
+    //  } else {
+    //    this.handleNewRowSelect(rowIdx, rowData);
+    //  }
+    //} else { // Fallback to old onRowSelect handler
 	  let selectedRows = this.state.selectedRows.slice(0);
       let selectedRow = this.getSelectedRow(selectedRows, rowData[this.props.rowKey]);
       if (selectedRow) {
@@ -563,7 +563,7 @@ const ReactDataGrid = React.createClass({
 		let filteredRows = selectedRows.filter(r => r.isSelected === true);
         this.props.onRowSelect(filteredRows);
       }
-    }
+    //}
   },
 
   handleCheckboxChange: function(e: SyntheticEvent) {
@@ -573,35 +573,35 @@ const ReactDataGrid = React.createClass({
     } else {
       allRowsSelected = false;
     }
-    if (this.useNewRowSelection()) {
-      let {keys, indexes, isSelectedKey} = this.props.rowSelection.selectBy;
+    //if (this.useNewRowSelection()) {
+    //  let {keys, indexes, isSelectedKey} = this.props.rowSelection.selectBy;
 
-      if (allRowsSelected && typeof this.props.rowSelection.onRowsSelected === 'function') {
-        let selectedRows = [];
-        for (let i = 0; i < this.props.rowsCount; i++) {
-          let rowData = this.props.rowGetter(i);
-          if (!RowUtils.isRowSelected(keys, indexes, isSelectedKey, rowData, i)) {
-            selectedRows.push({rowIdx: i, row: rowData});
-          }
-        }
+    //  if (allRowsSelected && typeof this.props.rowSelection.onRowsSelected === 'function') {
+    //    let selectedRows = [];
+    //    for (let i = 0; i < this.props.rowsCount; i++) {
+    //      let rowData = this.props.rowGetter(i);
+    //      if (!RowUtils.isRowSelected(keys, indexes, isSelectedKey, rowData, i)) {
+    //        selectedRows.push({rowIdx: i, row: rowData});
+    //      }
+    //    }
 
-        if (selectedRows.length > 0) {
-          this.props.rowSelection.onRowsSelected(selectedRows);
-        }
-      } else if (!allRowsSelected && typeof this.props.rowSelection.onRowsDeselected === 'function') {
-        let deselectedRows = [];
-        for (let i = 0; i < this.props.rowsCount; i++) {
-          let rowData = this.props.rowGetter(i);
-          if (RowUtils.isRowSelected(keys, indexes, isSelectedKey, rowData, i)) {
-            deselectedRows.push({rowIdx: i, row: rowData});
-          }
-        }
+    //    if (selectedRows.length > 0) {
+    //      this.props.rowSelection.onRowsSelected(selectedRows);
+    //    }
+    //  } else if (!allRowsSelected && typeof this.props.rowSelection.onRowsDeselected === 'function') {
+    //    let deselectedRows = [];
+    //    for (let i = 0; i < this.props.rowsCount; i++) {
+    //      let rowData = this.props.rowGetter(i);
+    //      if (RowUtils.isRowSelected(keys, indexes, isSelectedKey, rowData, i)) {
+    //        deselectedRows.push({rowIdx: i, row: rowData});
+    //      }
+    //    }
 
-        if (deselectedRows.length > 0) {
-          this.props.rowSelection.onRowsDeselected(deselectedRows);
-        }
-      }
-    } else {
+    //    if (deselectedRows.length > 0) {
+    //      this.props.rowSelection.onRowsDeselected(deselectedRows);
+    //    }
+    //  }
+    //} else {
       let selectedRows = [];
       for (let i = 0; i < this.props.rowsCount; i++) {
         let row = Object.assign({}, this.props.rowGetter(i), {isSelected: allRowsSelected});
@@ -611,7 +611,7 @@ const ReactDataGrid = React.createClass({
       if (typeof this.props.onRowSelect === 'function') {
         this.props.onRowSelect(selectedRows.filter(r => r.isSelected === true));
       }
-    }
+    //}
   },
 
   getScrollOffSet() {
