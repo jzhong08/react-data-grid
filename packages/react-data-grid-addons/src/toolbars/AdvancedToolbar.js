@@ -3,11 +3,12 @@ import Toolbar from './Toolbar';
 import '../../../../themes/react-data-grid-toolbar.css';
 
 const propTypes = {
-    children: PropTypes.array,
-    enableFilter: React.PropTypes.bool,
-    onToggleFilter: React.PropTypes.func,
     enableAddRow: React.PropTypes.bool,
-    onAddRow: React.PropTypes.func
+	onAddRow: React.PropTypes.func,
+	enableFilter: React.PropTypes.bool,
+	filterRowsButtonText: React.PropTypes.string,
+    onToggleFilter: React.PropTypes.func,
+	children: PropTypes.array,
 };
 
 const defaultProps = {
@@ -21,7 +22,7 @@ class AdvancedToolbar extends Component {
       <div className="react-grid-Toolbar">
         {this.props.children}
         <div className="tools">
-          <Toolbar enableAddRow={this.props.enableAddRow} onAddRow={this.props.onAddRow} enableFilter={this.props.enableFilter} onToggleFilter={this.props.onToggleFilter} />
+          <Toolbar enableAddRow={this.props.enableAddRow} onAddRow={this.props.onAddRow} enableFilter={this.props.enableFilter} filterRowsButtonText={this.props.filterRowsButtonText} onToggleFilter={this.props.onToggleFilter} />
         </div>
       </div>);
   }

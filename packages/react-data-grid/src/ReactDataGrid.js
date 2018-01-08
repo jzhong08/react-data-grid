@@ -884,7 +884,8 @@ const ReactDataGrid = React.createClass({
 
   renderToolbar(): ReactElement {
     let Toolbar = this.props.toolbar;
-    let toolBarProps =  {columns: this.props.columns, onToggleFilter: this.onToggleFilter, numberOfRows: this.props.rowsCount};
+	let filterRowsButtonText = this.state.canFilter ? "Hide Filter" : "Show Filter";
+    let toolBarProps =  {columns: this.props.columns, onToggleFilter: this.onToggleFilter, filterRowsButtonText: filterRowsButtonText, numberOfRows: this.props.rowsCount};
     if (React.isValidElement(Toolbar)) {
       return ( React.cloneElement(Toolbar, toolBarProps));
     } else if (isFunction(Toolbar)) {

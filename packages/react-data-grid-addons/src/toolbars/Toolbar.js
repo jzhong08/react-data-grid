@@ -3,13 +3,13 @@ require('../../../../themes/react-data-grid-toolbar.css');
 
 const Toolbar = React.createClass({
   propTypes: {
-    onAddRow: React.PropTypes.func,
     enableAddRow: React.PropTypes.bool,
-    onToggleFilter: React.PropTypes.func,
+	addRowButtonText: React.PropTypes.string,
+	onAddRow: React.PropTypes.func,
     enableFilter: React.PropTypes.bool,
+	filterRowsButtonText: React.PropTypes.string,
+    onToggleFilter: React.PropTypes.func,
     numberOfRows: React.PropTypes.number,
-    addRowButtonText: React.PropTypes.string,
-    filterRowsButtonText: React.PropTypes.string,
     children: React.PropTypes.any
   },
 
@@ -25,7 +25,7 @@ const Toolbar = React.createClass({
       enableAddRow: true,
       addRowButtonText: 'Add Row',
       enableFilter: true,
-      filterRowsButtonText: 'Filter'
+      filterRowsButtonText: 'Default Filter Rows Button Name'
     };
   },
 
