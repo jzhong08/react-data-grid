@@ -52,7 +52,7 @@ module.exports = {
     if (nextProps.columns) {
       if (!ColumnMetrics.sameColumns(this.props.columns, nextProps.columns, this.props.columnEquality) ||
           nextProps.minWidth !== this.props.minWidth) {
-        let columnMetrics = this.createColumnMetrics(nextProps);
+        let columnMetrics = this.createColumnMetrics(this.state.rowSelectType, nextProps);
         this.setState({columnMetrics: columnMetrics});
       }
     }
@@ -97,17 +97,27 @@ module.exports = {
     }
   },
 
-  metricsUpdated() {
-    let columnMetrics = this.createColumnMetrics();
+  metricsUpdated(rowSelectType = this.state.rowSelectType) {
+    let columnMetrics = this.createColumnMetrics(rowSelectType : rowSelectType);
     this.setState({columnMetrics});
   },
 
-  createColumnMetrics(props = this.props) {
-    let gridColumns = this.setupGridColumns(props);
+  createColumnMetrics(rowSelectType, props = this.props) {
+	let totalWidthNew = this.state.columnMetrics.totalWidth;
+	
+	if (this.state.rowSelectType === 'none' && rowSelectType !== 'none') {
+	  totalWidthNew += props.rowSelectColumnWidth;
+	}
+	
+	if (this.state.rowSelectType !== 'none' && rowSelectType === 'none') {
+	  totalWidthNew -= props.rowSelectColumnWidth;
+	}
+	
+    let gridColumns = this.setupGridColumns(rowSelectType, props);
     return this.getColumnMetricsType({
       columns: gridColumns,
       minColumnWidth: this.props.minColumnWidth,
-      totalWidth: props.minWidth
+      totalWidth: totalWidthNew
     });
   },
 

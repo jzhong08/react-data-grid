@@ -8,6 +8,8 @@ const propTypes = {
 	enableFilter: React.PropTypes.bool,
 	filterRowsButtonText: React.PropTypes.string,
     onToggleFilter: React.PropTypes.func,
+	enableRowSelect: React.PropTypes.bool,
+	onRowSelectDropdownChange: React.PropTypes.func,
 	children: PropTypes.array,
 };
 
@@ -22,7 +24,15 @@ class AdvancedToolbar extends Component {
       <div className="react-grid-Toolbar">
         {this.props.children}
         <div className="tools">
-          <Toolbar enableAddRow={this.props.enableAddRow} onAddRow={this.props.onAddRow} enableFilter={this.props.enableFilter} filterRowsButtonText={this.props.filterRowsButtonText} onToggleFilter={this.props.onToggleFilter} />
+          <Toolbar
+		    enableAddRow={this.props.enableAddRow}
+			onAddRow={this.props.onAddRow}
+			enableFilter={this.props.enableFilter}
+			filterRowsButtonText={this.props.filterRowsButtonText}
+			onToggleFilter={this.props.onToggleFilter}
+			onRowSelectDropdownChange={this.props.onRowSelectDropdownChange}
+			enableRowSelect={this.props.enableRowSelect}
+		  />
         </div>
       </div>);
   }

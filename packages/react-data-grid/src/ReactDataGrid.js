@@ -56,7 +56,6 @@ const ReactDataGrid = React.createClass({
     headerFiltersHeight: React.PropTypes.number,
     minHeight: React.PropTypes.number.isRequired,
     minWidth: React.PropTypes.number,
-    enableRowSelect: React.PropTypes.oneOfType([React.PropTypes.bool, React.PropTypes.string]),
     onRowUpdated: React.PropTypes.func,
     rowGetter: React.PropTypes.func.isRequired,
     rowsCount: React.PropTypes.number.isRequired,
@@ -71,6 +70,7 @@ const ReactDataGrid = React.createClass({
     onDragHandleDoubleClick: React.PropTypes.func,
     onGridRowsUpdated: React.PropTypes.func,
     onRowSelect: React.PropTypes.func,
+	rowSelectColumnWidth: React.PropTypes.number.isRequired,
     rowKey: React.PropTypes.string,
     rowScrollTimeout: React.PropTypes.number,
     onClearFilters: React.PropTypes.func,
@@ -121,8 +121,8 @@ const ReactDataGrid = React.createClass({
       tabIndex: -1,
       rowHeight: 35,
       headerFiltersHeight: 45,
-      enableRowSelect: false,
       minHeight: 350,
+	  rowSelectColumnWidth: 30,
       rowKey: 'id',
       rowScrollTimeout: 0,
       cellNavigationMode: 'none',
@@ -135,13 +135,42 @@ const ReactDataGrid = React.createClass({
     };
   },
 
-  getInitialState: function(): {selected: SelectedType; copied: ?{idx: number; rowIdx: number}; selectedRows: Array<Row>; expandedRows: Array<Row>; canFilter: boolean; columnFilters: any; sortDirection: ?SortType; sortColumn: ?ExcelColumn; dragged: ?DraggedType;  } {
-    let columnMetrics = this.createColumnMetrics();
-    let initialState = {columnMetrics, selectedRows: [], copied: null, expandedRows: [], canFilter: false, columnFilters: {}, sortDirection: null, sortColumn: null, dragged: null, scrollOffset: 0, lastRowIdxUiSelected: -1};
+  getInitialState: function(): {
+	  selected: SelectedType;
+	  copied: ?{idx: number; rowIdx: number};
+	  selectedRows: Array<Row>;
+	  expandedRows: Array<Row>;
+	  canFilter: boolean;
+	  rowSelectType: string;
+	  columnFilters: any;
+	  sortDirection: ?SortType;
+	  sortColumn: ?ExcelColumn;
+	  dragged: ?DraggedType;
+	} {
+    //let columnMetrics = this.createColumnMetrics();
+	let columnMetrics = this.getColumnMetricsType({
+      columns: this.props.columns,
+      minColumnWidth: this.props.minColumnWidth,
+      totalWidth: this.props.minWidth
+    });
+    let initialState = {
+		columnMetrics,
+		selectedRows: [],
+		copied: null,
+		expandedRows: [],
+		canFilter: false,
+		rowSelectType: 'none',
+		columnFilters: {},
+		sortDirection: null,
+		sortColumn: null,
+		dragged: null,
+		scrollOffset: 0,
+		lastRowIdxUiSelected: -1
+	};
     if (this.props.enableCellSelect) {
-      initialState.selected = {rowIdx: 0, idx: 0};
+        initialState.selected = {rowIdx: 0, idx: 0};
     } else {
-      initialState.selected = {rowIdx: -1, idx: -1};
+        initialState.selected = {rowIdx: -1, idx: -1};
     }
     return initialState;
   },
@@ -353,6 +382,10 @@ const ReactDataGrid = React.createClass({
       }
     });
   },
+  
+  onRowSelectDropdownChange(event) {
+	  this.metricsUpdated(event.target.value);
+  },
 
   onDragHandleDoubleClick(e) {
     if (this.props.onDragHandleDoubleClick) {
@@ -552,7 +585,7 @@ const ReactDataGrid = React.createClass({
       if (selectedRow) {
         selectedRow.isSelected = !selectedRow.isSelected;
       } else {
-		if (this.props.enableRowSelect === 'single') {
+		if (this.state.rowSelectType === 'single') {
 	      selectedRows = [];
 		}
         rowData.isSelected = true;
@@ -689,8 +722,8 @@ const ReactDataGrid = React.createClass({
   },
 
   getNbrColumns() {
-    const {columns, enableRowSelect} = this.props;
-    return enableRowSelect ? columns.length + 1 : columns.length;
+    const {columns} = this.props;
+    return this.state.rowSelectType != 'none' ? columns.length + 1 : columns.length;
   },
 
   getDataGridDOMNode() {
@@ -836,43 +869,89 @@ const ReactDataGrid = React.createClass({
     return this.state.selected.active === true;
   },
 
-  setupGridColumns: function(props = this.props): Array<any> {
-    const { columns } = props;
-    if (this._cachedColumns === columns) {
-      return this._cachedComputedColumns;
+ // setupGridColumns: function(props = this.props): Array<any> {
+ //   const { columns } = props;
+ //   if (this._cachedColumns === columns) {
+ //     return this._cachedComputedColumns;
+ //   }
+
+ //   this._cachedColumns = columns;
+
+ //   let cols = columns.slice(0);
+ //   //let newCols = {};
+	////let rowSelectType = this.state ? this.state.rowSelectType : 'multiple';
+ //   if (this.props.rowActionsCell || (this.state.rowSelectType != 'none' && !this.props.rowSelection) || (props.rowSelection && props.rowSelection.showCheckbox !== false)) {
+ //     let headerRenderer = this.state.rowSelectType === 'single' ? null :
+ //     <div className="react-grid-checkbox-container checkbox-align">
+ //       <input className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
+ //       <label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
+ //     </div>;
+ //     let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
+ //     let selectColumn = {
+ //       key: 'select-row',
+ //       name: '',
+ //       formatter: <Formatter rowSelection={this.props.rowSelection}/>,
+ //       onCellChange: this.handleRowSelect,
+ //       filterable: false,
+ //       headerRenderer: headerRenderer,
+ //       width: 30,
+ //       locked: true,
+ //       getRowMetaData: (rowData) => rowData,
+ //       cellClass: this.props.rowActionsCell ? 'rdg-row-actions-cell' : ''
+ //     };
+ //     let newCols = cols.unshift(selectColumn);
+ //     cols = newCols > 0 ? cols : newCols;
+ //   }
+ //   this._cachedComputedColumns = cols;
+
+ //   return this._cachedComputedColumns;
+ // },
+
+  setupGridColumns: function(rowSelectType, props = this.props): Array<any> {
+    //if (rowSelectType === this.state.rowSelectType) {
+    //  return props.columns;
+    //}
+	
+	// Always remove the existing 'select-row' column, if any.
+	//let columns = props.columns.filter(element => element.key !== 'select-row');
+	
+    if (rowSelectType === 'none') {
+	  this.setState({ rowSelectType : rowSelectType })
+      return props.columns;
     }
 
-    this._cachedColumns = columns;
-
-    let cols = columns.slice(0);
-    let newCols = {};
-    if (this.props.rowActionsCell || (props.enableRowSelect && !this.props.rowSelection) || (props.rowSelection && props.rowSelection.showCheckbox !== false)) {
-      let headerRenderer = props.enableRowSelect === 'single' ? null :
-      <div className="react-grid-checkbox-container checkbox-align">
-        <input className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
-        <label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
-      </div>;
-      let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
-      let selectColumn = {
-        key: 'select-row',
-        name: '',
-        formatter: <Formatter rowSelection={this.props.rowSelection}/>,
-        onCellChange: this.handleRowSelect,
-        filterable: false,
-        headerRenderer: headerRenderer,
-        width: 30,
-        locked: true,
-        getRowMetaData: (rowData) => rowData,
-        cellClass: this.props.rowActionsCell ? 'rdg-row-actions-cell' : ''
-      };
-      let newCols = cols.unshift(selectColumn);
-      cols = newCols > 0 ? cols : newCols;
+    let cols = props.columns.slice(0);
+    let headerRenderer = rowSelectType === 'single' ? null :
+    <div className="react-grid-checkbox-container checkbox-align">
+      <input className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
+      <label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
+    </div>;
+    let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
+    let selectColumn = {
+      key: 'select-row',
+      name: '',
+      formatter: <Formatter rowSelection={this.props.rowSelection} />,
+      onCellChange: this.handleRowSelect,
+      filterable: false,
+      headerRenderer: headerRenderer,
+      width: props.rowSelectColumnWidth,
+      locked: true,
+      getRowMetaData: (rowData) => rowData,
+      cellClass: this.props.rowActionsCell ? 'rdg-row-actions-cell' : ''
     }
-    this._cachedComputedColumns = cols;
-
-    return this._cachedComputedColumns;
+    let newCols = cols.unshift(selectColumn);
+	
+	// Cannot keep multiple selected rows when changed to single selection (from either none or multiple). So just clear all selected rows.
+	if (rowSelectType === 'single' && this.state.selectedRows.length > 1) {
+	  this.setState({ rowSelectType : rowSelectType, selected : {}, selectedRows : [] })
+	}
+	// Otherwise, keep the selected rows, even when the row select column is not shown.
+	else {
+	  this.setState({ rowSelectType : rowSelectType })
+	}
+	
+    return newCols > 0 ? cols : newCols;
   },
-
 
   copyPasteEnabled: function(): boolean {
     return this.props.onCellCopyPaste !== null;
@@ -885,7 +964,13 @@ const ReactDataGrid = React.createClass({
   renderToolbar(): ReactElement {
     let Toolbar = this.props.toolbar;
 	let filterRowsButtonText = this.state.canFilter ? "Hide Filter" : "Show Filter";
-    let toolBarProps =  {columns: this.props.columns, onToggleFilter: this.onToggleFilter, filterRowsButtonText: filterRowsButtonText, numberOfRows: this.props.rowsCount};
+    let toolBarProps =  {
+	  columns: this.props.columns,
+	  onToggleFilter: this.onToggleFilter,
+	  filterRowsButtonText: filterRowsButtonText,
+	  onRowSelectDropdownChange: this.onRowSelectDropdownChange,
+	  numberOfRows: this.props.rowsCount
+	};
     if (React.isValidElement(Toolbar)) {
       return ( React.cloneElement(Toolbar, toolBarProps));
     } else if (isFunction(Toolbar)) {
@@ -922,7 +1007,8 @@ const ReactDataGrid = React.createClass({
     };
 
     let toolbar = this.renderToolbar();
-    let containerWidth = this.props.minWidth || this.DOMMetrics.gridWidth();
+    //let containerWidth = this.props.minWidth || this.DOMMetrics.gridWidth();
+	let containerWidth = this.state.columnMetrics.totalWidth || this.DOMMetrics.gridWidth();
     let gridWidth = containerWidth - this.state.scrollOffset;
 
     // depending on the current lifecycle stage, gridWidth() may not initialize correctly

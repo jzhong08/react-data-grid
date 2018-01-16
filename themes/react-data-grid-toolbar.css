@@ -19,7 +19,7 @@
     font-size: 11px;
     //font-size: 14px;
     font-weight: 700;
-    line-height: 1.42857143;
+    line-height: 1.5;
     text-align: center;
     white-space: nowrap;
     vertical-align: middle;
@@ -41,6 +41,43 @@
 }
 .react-grid-Toolbar .grouped-col-btn:hover {
   color: white;
+}
+    .react-grid-Toolbar .select {
+        display: inline-block;
+        padding: 1px 1px;
+        //padding: 6px 12px;
+        margin-bottom: 0;
+        font-size: 11px;
+        //font-size: 14px;
+        font-weight: 700;
+        line-height: 1.5;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        -webkit-user-select: none;
+        color: white;
+        background: #428bca;
+        height: 20px;
+        border: 1px solid #e7eaec;
+        border-radius: 4px;
+    }
+.react-grid-Toolbar .select > option {
+    font-weight: 700;
+    color: #428bca;
+    background: white;
+    padding: 0px 0px;
+    margin: 1px 1px;
+}
+.react-grid-Toolbar .select > option:checked {
+    color: #428bca;
+    background: white;
+}
+// Styling of option hover of native select element does not work because it is controlled by OS.
+.react-grid-Toolbar .select > option:hover {
+    box-shadow: 0 0 10px 100px #1882A8 inset;
 }
 .react-grid-Toolbar .tools {
   display: inline-block;
