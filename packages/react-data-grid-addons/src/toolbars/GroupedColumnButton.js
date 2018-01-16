@@ -9,7 +9,7 @@ export default class GroupedColumnButton extends Component {
       whiteSpace: 'nowrap'
     };
     return (
-      <button  className="btn grouped-col-btn btn-sm"><span style={style}>{this.props.name}</span>
+      <button  className="grouped-col-btn"><span style={style}>{this.props.name}</span>
         <span
           className="glyphicon glyphicon-trash"
           style={{float: 'right', paddingLeft: '5px'}}
