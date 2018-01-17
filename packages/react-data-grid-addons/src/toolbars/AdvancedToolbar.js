@@ -9,6 +9,7 @@ const propTypes = {
 	filterRowsButtonText: React.PropTypes.string,
     onToggleFilter: React.PropTypes.func,
 	enableRowSelect: React.PropTypes.bool,
+	rowSelectValue: React.PropTypes.string,
 	onRowSelectDropdownChange: React.PropTypes.func,
 	children: PropTypes.array,
 };
@@ -30,8 +31,9 @@ class AdvancedToolbar extends Component {
 			enableFilter={this.props.enableFilter}
 			filterRowsButtonText={this.props.filterRowsButtonText}
 			onToggleFilter={this.props.onToggleFilter}
-			onRowSelectDropdownChange={this.props.onRowSelectDropdownChange}
 			enableRowSelect={this.props.enableRowSelect}
+			rowSelectValue={this.props.rowSelectValue}
+			onRowSelectDropdownChange={this.props.onRowSelectDropdownChange}
 		  />
         </div>
       </div>);

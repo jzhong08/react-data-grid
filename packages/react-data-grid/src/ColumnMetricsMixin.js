@@ -13,9 +13,9 @@ class Column {
 }
 
 type ColumnMetricsType = {
-    columns: Array<Column>;
-    totalWidth: number;
-    minColumnWidth: number;
+	columns: Array<Column>;
+	totalWidth: number;
+	minColumnWidth: number;
 };
 
 module.exports = {
@@ -52,7 +52,7 @@ module.exports = {
     if (nextProps.columns) {
       if (!ColumnMetrics.sameColumns(this.props.columns, nextProps.columns, this.props.columnEquality) ||
           nextProps.minWidth !== this.props.minWidth) {
-        let columnMetrics = this.createColumnMetrics(this.state.rowSelectType, nextProps);
+        let columnMetrics = this.createColumnMetrics(this.state.rowSelectValue, nextProps);
         this.setState({columnMetrics: columnMetrics});
       }
     }
@@ -97,25 +97,26 @@ module.exports = {
     }
   },
 
-  metricsUpdated(rowSelectType = this.state.rowSelectType) {
-    let columnMetrics = this.createColumnMetrics(rowSelectType : rowSelectType);
+  metricsUpdated(rowSelectValue = this.state.rowSelectValue) {
+    let columnMetrics = this.createColumnMetrics(rowSelectValue : rowSelectValue);
     this.setState({columnMetrics});
   },
 
-  createColumnMetrics(rowSelectType, props = this.props) {
-	let totalWidthNew = this.state.columnMetrics.totalWidth;
+  createColumnMetrics(rowSelectValue, props = this.props) {
+		let result = this.setupGridColumns(rowSelectValue, props);
+				
+		let totalWidthNew = this.state.columnMetrics.totalWidth;
+		
+		if (this.state.rowSelectValue === 'none' && result.rowSelectValue !== 'none') {
+			totalWidthNew += props.rowSelectColumnWidth;
+		}
+		
+		if (this.state.rowSelectValue !== 'none' && result.rowSelectValue === 'none') {
+			totalWidthNew -= props.rowSelectColumnWidth;
+		}
 	
-	if (this.state.rowSelectType === 'none' && rowSelectType !== 'none') {
-	  totalWidthNew += props.rowSelectColumnWidth;
-	}
-	
-	if (this.state.rowSelectType !== 'none' && rowSelectType === 'none') {
-	  totalWidthNew -= props.rowSelectColumnWidth;
-	}
-	
-    let gridColumns = this.setupGridColumns(rowSelectType, props);
     return this.getColumnMetricsType({
-      columns: gridColumns,
+      columns: result.columns,
       minColumnWidth: this.props.minColumnWidth,
       totalWidth: totalWidthNew
     });

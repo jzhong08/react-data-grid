@@ -12,6 +12,7 @@ const Toolbar = React.createClass({
 	filterRowsButtonText: React.PropTypes.string,
     onToggleFilter: React.PropTypes.func,
 	enableRowSelect: React.PropTypes.bool,
+	rowSelectValue: React.PropTypes.string,
     numberOfRows: React.PropTypes.number,
     children: React.PropTypes.any
   },
@@ -63,7 +64,7 @@ const Toolbar = React.createClass({
   
   renderRowSelectDropdown() {
     if (this.props.enableRowSelect) {
-      return (<select className="select" defaultValue="none" onChange={this.props.onRowSelectDropdownChange}>
+      return (<select className="select" value={this.props.rowSelectValue} onChange={this.props.onRowSelectDropdownChange}>
         <option value="multiple">Multiple Select</option>
 		<option value="single">Single Select</option>
 		<option value="none">No Select</option>
