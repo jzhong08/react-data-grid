@@ -97,13 +97,13 @@ module.exports = {
     }
   },
 
-  metricsUpdated(rowSelectValue = this.state.rowSelectValue) {
-    let columnMetrics = this.createColumnMetrics(rowSelectValue : rowSelectValue);
+  metricsUpdated(rowSelectValue = this.state.rowSelectValue, allRowsSelected = false) {
+    let columnMetrics = this.createColumnMetrics(rowSelectValue, allRowsSelected);
     this.setState({columnMetrics});
   },
 
-  createColumnMetrics(rowSelectValue, props = this.props) {
-		let result = this.setupGridColumns(rowSelectValue, props);
+  createColumnMetrics(rowSelectValue, allRowsSelected = false, props = this.props) {
+		let result = this.setupGridColumns(rowSelectValue, allRowsSelected, props);
 				
 		let totalWidthNew = this.state.columnMetrics.totalWidth;
 		

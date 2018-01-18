@@ -58,10 +58,12 @@ const Toolbar = React.createClass({
 
 	renderDeleteRowButton() {
     if (this.props.enableDeleteRow) {
-			let buttonToggleStr = (this.props.selectedRows && this.props.selectedRows.length > 0) ? "" : "Disabled";
-      return (<button type="button" className="btn" disabled={buttonToggleStr} onClick={this.props.onDeleteRow}>
-        {this.props.deleteRowButtonText}
-      </button>);
+			let buttonToggleStr = (this.props.selectedRows && this.props.selectedRows.filter(elem => elem.isSelected).length > 0) ? "" : "Disabled"; 
+			// Empty string set to disabled attribute enables the button.
+      return (
+				<button type="button" className="btn" disabled={buttonToggleStr} onClick={this.props.onDeleteRow}>
+					{this.props.deleteRowButtonText}
+				</button>);
     }
   },
 
@@ -71,7 +73,7 @@ const Toolbar = React.createClass({
 	//			options = {[
 	//				{value: "MultipleSelect", label: "Multiple Select"},
 	//				{value: "SingleSelect", label: "Single Select"},
-	//				{value: "No Select", label: "No Select"},
+	//				{value: "No Select", label: "Hide Select"},
 	//			]}
 	//		  />);
     //}
@@ -82,7 +84,7 @@ const Toolbar = React.createClass({
       return (<select className="select" value={this.props.rowSelectValue} onChange={this.props.onRowSelectDropdownChange}>
 								<option value="multiple">Multiple Select</option>
 								<option value="single">Single Select</option>
-								<option value="none">No Select</option>
+								<option value="none">Hide Select</option>
 							</select>
 			);
     }

@@ -379,13 +379,12 @@ const ReactDataGrid = React.createClass({
 
 	onDeleteRow() {
 		if (this.props.deleteSelectedRows) {
-			// No need to check selectedRows; otherwise the Delete Row button is disabled.
-			//if (this.state.selectedRows && this.state.selectedRows.length > 0) {
-			if (window.confirm('Are you sure to delete ' + this.state.selectedRows.length + ' selected rows?') == true) {
-				this.props.deleteSelectedRows(this.state.selectedRows);
+			// No need to check if there are selected rows; otherwise the Delete Row button is disabled.
+			if (window.confirm('Are you sure to delete ' + this.getSelectedRows().length + ' selected rows?') == true) {
+				this.props.deleteSelectedRows(this.getSelectedRows());
 				this.setState({ selectedRows : [] });
+				this.metricsUpdated(this.state.rowSelectValue, false); // Reset multi-select box to un-checked if all rows are selected and then deleted.
 			}
-			//}
     }
 		else {
 			alert("this.props.deleteSelectedRows is not defined.")
@@ -660,6 +659,7 @@ const ReactDataGrid = React.createClass({
         selectedRows.push(row);
       }
       this.setState({selectedRows: selectedRows});
+			this.metricsUpdated(this.state.rowSelectValue, allRowsSelected);
       if (typeof this.props.onRowSelect === 'function') {
         this.props.onRowSelect(selectedRows.filter(r => r.isSelected === true));
       }
@@ -710,10 +710,10 @@ const ReactDataGrid = React.createClass({
   },
   getSelectedRows() {
     if (this.props.rowSelection) {
-      return null;
+      return [];
     }
 
-    return this.state.selectedRows.filter(r => r.isSelected === true);
+    return this.state.selectedRows.filter(elem => elem.isSelected);
   },
   getSelectedValue(): string {
     let rowIdx = this.state.selected.rowIdx;
@@ -926,7 +926,7 @@ const ReactDataGrid = React.createClass({
  //   return this._cachedComputedColumns;
  // },
 
-  setupGridColumns: function(rowSelectValue, props) {
+  setupGridColumns: function(rowSelectValue, allRowsSelected, props) {
 		// No need to check if rowSelectValue has changed because the grid columns need to generate from scratch (props.columns) anyway.
     //if (rowSelectValue === this.state.rowSelectValue) {
     //  return props.columns; // This would be wrong if rowSelectValue is not 'none'.
@@ -934,7 +934,7 @@ const ReactDataGrid = React.createClass({
 
 		// Cannot keep multiple selected rows when changed to single selection (from either none or multiple). 
 		// So ask users to confirm. If confirmed, clear all selected rows.
-		if (rowSelectValue === 'single' && this.state.selectedRows.length > 1) {
+		if (rowSelectValue === 'single' && this.getSelectedRows().length > 1) {
 			//<ReactConfirmAlert
 				//title = 'Change to Single Row selection?'
 			//message = 'More than one row has been selected. Change to Single Row selection will clear all selected rows.'
@@ -943,7 +943,7 @@ const ReactDataGrid = React.createClass({
 			//onConfirm = { () => alert('Confirmed') }
 			//onCancel = { () => alert('Canceled') }
 			///>
-			if (window.confirm('Change to Single Row selection? All ' + this.state.selectedRows.length + ' selected rows will be cleared.') == true) {
+			if (window.confirm('Change to Single Row selection? All ' + this.getSelectedRows().length + ' selected rows will be cleared.') == true) {
 				this.setState({ rowSelectValue : rowSelectValue, selected : {}, selectedRows : [] });
 			}
 			else {
@@ -962,10 +962,10 @@ const ReactDataGrid = React.createClass({
 			// Create the row select column.
 			let columnsNew = props.columns.slice(0);
 			let headerRenderer = rowSelectValue === 'single' ? null :
-			<div className="react-grid-checkbox-container checkbox-align">
-				<input className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
-				<label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
-			</div>;
+				<div className="react-grid-checkbox-container checkbox-align">
+					<input checked={allRowsSelected} className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => 		this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
+					<label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
+				</div>;
 			let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
 			let selectColumn = {
 				key: 'select-row',
@@ -985,7 +985,6 @@ const ReactDataGrid = React.createClass({
 		}
   },
 
-  
   copyPasteEnabled: function(): boolean {
     return this.props.onCellCopyPaste !== null;
   },
@@ -1044,7 +1043,7 @@ const ReactDataGrid = React.createClass({
 
     let toolbar = this.renderToolbar();
     //let containerWidth = this.props.minWidth || this.DOMMetrics.gridWidth();
-	let containerWidth = this.state.columnMetrics.totalWidth || this.DOMMetrics.gridWidth();
+		let containerWidth = this.state.columnMetrics.totalWidth || this.DOMMetrics.gridWidth();
     let gridWidth = containerWidth - this.state.scrollOffset;
 
     // depending on the current lifecycle stage, gridWidth() may not initialize correctly
@@ -1056,6 +1055,7 @@ const ReactDataGrid = React.createClass({
     if (typeof gridWidth === 'undefined' || isNaN(gridWidth) || gridWidth === 0) {
       gridWidth = '100%';
     }
+		
     return (
       <div className="react-grid-Container" style={{width: containerWidth}}>
         {toolbar}
