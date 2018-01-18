@@ -72,9 +72,10 @@ const ReactDataGrid = React.createClass({
     onDragHandleDoubleClick: React.PropTypes.func,
     onGridRowsUpdated: React.PropTypes.func,
     onRowSelect: React.PropTypes.func,
-	rowSelectColumnWidth: React.PropTypes.number.isRequired,
+		rowSelectColumnWidth: React.PropTypes.number.isRequired,
     rowKey: React.PropTypes.string,
     rowScrollTimeout: React.PropTypes.number,
+		deleteSelectedRows: React.PropTypes.func,
     onClearFilters: React.PropTypes.func,
     contextMenu: React.PropTypes.element,
     cellNavigationMode: React.PropTypes.oneOf(['none', 'loopOverRow', 'changeRow']),
@@ -148,31 +149,32 @@ const ReactDataGrid = React.createClass({
 	  sortDirection: ?SortType;
 	  sortColumn: ?ExcelColumn;
 	  dragged: ?DraggedType;
-	} {
+	}
+	{
     //let columnMetrics = this.createColumnMetrics();
-	let columnMetrics = this.getColumnMetricsType({
+		let columnMetrics = this.getColumnMetricsType({
       columns: this.props.columns,
       minColumnWidth: this.props.minColumnWidth,
       totalWidth: this.props.minWidth
     });
     let initialState = {
-		columnMetrics,
-		selectedRows: [],
-		copied: null,
-		expandedRows: [],
-		canFilter: false,
-		rowSelectValue: 'none',
-		columnFilters: {},
-		sortDirection: null,
-		sortColumn: null,
-		dragged: null,
-		scrollOffset: 0,
-		lastRowIdxUiSelected: -1
-	};
+			columnMetrics,
+			selectedRows: [],
+			copied: null,
+			expandedRows: [],
+			canFilter: false,
+			rowSelectValue: 'none',
+			columnFilters: {},
+			sortDirection: null,
+			sortColumn: null,
+			dragged: null,
+			scrollOffset: 0,
+			lastRowIdxUiSelected: -1
+		};
     if (this.props.enableCellSelect) {
-        initialState.selected = {rowIdx: 0, idx: 0};
+      initialState.selected = {rowIdx: 0, idx: 0};
     } else {
-        initialState.selected = {rowIdx: -1, idx: -1};
+      initialState.selected = {rowIdx: -1, idx: -1};
     }
     return initialState;
   },
@@ -374,6 +376,21 @@ const ReactDataGrid = React.createClass({
       }
     }
   },
+
+	onDeleteRow() {
+		if (this.props.deleteSelectedRows) {
+			// No need to check selectedRows; otherwise the Delete Row button is disabled.
+			//if (this.state.selectedRows && this.state.selectedRows.length > 0) {
+			if (window.confirm('Are you sure to delete ' + this.state.selectedRows.length + ' selected rows?') == true) {
+				this.props.deleteSelectedRows(this.state.selectedRows);
+				this.setState({ selectedRows : [] });
+			}
+			//}
+    }
+		else {
+			alert("this.props.deleteSelectedRows is not defined.")
+		}
+	},
 
   onToggleFilter() {
     // setState() does not immediately mutate this.state but creates a pending state transition.
@@ -982,6 +999,8 @@ const ReactDataGrid = React.createClass({
 	let filterRowsButtonText = this.state.canFilter ? "Hide Filter" : "Show Filter";
     let toolBarProps =  {
 	  columns: this.props.columns,
+		onDeleteRow: this.onDeleteRow,
+		selectedRows: this.state.selectedRows,
 	  onToggleFilter: this.onToggleFilter,
 	  filterRowsButtonText: filterRowsButtonText,
 	  onRowSelectDropdownChange: this.onRowSelectDropdownChange,

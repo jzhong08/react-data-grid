@@ -3,11 +3,14 @@ import Toolbar from './Toolbar';
 import '../../../../themes/react-data-grid-toolbar.css';
 
 const propTypes = {
-    enableAddRow: React.PropTypes.bool,
+  enableAddRow: React.PropTypes.bool,
 	onAddRow: React.PropTypes.func,
+	enableDeleteRow: React.PropTypes.bool,
+	onDeleteRow: React.PropTypes.func,
+	selectedRows: React.PropTypes.array,
 	enableFilter: React.PropTypes.bool,
 	filterRowsButtonText: React.PropTypes.string,
-    onToggleFilter: React.PropTypes.func,
+  onToggleFilter: React.PropTypes.func,
 	enableRowSelect: React.PropTypes.bool,
 	rowSelectValue: React.PropTypes.string,
 	onRowSelectDropdownChange: React.PropTypes.func,
@@ -15,8 +18,9 @@ const propTypes = {
 };
 
 const defaultProps = {
-  enableFilter: true,
-  enableAddRow: true
+  //enableAddRow: true,
+  //enableDeleteRow: true,
+	//enableFilter: true,
 };
 
 class AdvancedToolbar extends Component {
@@ -26,15 +30,18 @@ class AdvancedToolbar extends Component {
         {this.props.children}
         <div className="tools">
           <Toolbar
-		    enableAddRow={this.props.enableAddRow}
-			onAddRow={this.props.onAddRow}
-			enableFilter={this.props.enableFilter}
-			filterRowsButtonText={this.props.filterRowsButtonText}
-			onToggleFilter={this.props.onToggleFilter}
-			enableRowSelect={this.props.enableRowSelect}
-			rowSelectValue={this.props.rowSelectValue}
-			onRowSelectDropdownChange={this.props.onRowSelectDropdownChange}
-		  />
+						enableAddRow={this.props.enableAddRow}
+						onAddRow={this.props.onAddRow}
+						enableDeleteRow={this.props.enableDeleteRow}
+						onDeleteRow={this.props.onDeleteRow}
+						selectedRows={this.props.selectedRows}
+						enableFilter={this.props.enableFilter}
+						filterRowsButtonText={this.props.filterRowsButtonText}
+						onToggleFilter={this.props.onToggleFilter}
+						enableRowSelect={this.props.enableRowSelect}
+						rowSelectValue={this.props.rowSelectValue}
+						onRowSelectDropdownChange={this.props.onRowSelectDropdownChange}
+					/>
         </div>
       </div>);
   }

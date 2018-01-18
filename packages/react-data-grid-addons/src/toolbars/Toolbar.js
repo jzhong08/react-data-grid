@@ -6,32 +6,46 @@ require('../../../../themes/react-data-grid-toolbar.css');
 const Toolbar = React.createClass({
   propTypes: {
     enableAddRow: React.PropTypes.bool,
-	addRowButtonText: React.PropTypes.string,
-	onAddRow: React.PropTypes.func,
+		addRowButtonText: React.PropTypes.string,
+		onAddRow: React.PropTypes.func,
+		enableDeleteRow: React.PropTypes.bool,
+		deleteRowButtonText: React.PropTypes.string,
+		onDeleteRow: React.PropTypes.func,
+		selectedRows: React.PropTypes.array,
     enableFilter: React.PropTypes.bool,
-	filterRowsButtonText: React.PropTypes.string,
+		filterRowsButtonText: React.PropTypes.string,
     onToggleFilter: React.PropTypes.func,
-	enableRowSelect: React.PropTypes.bool,
-	rowSelectValue: React.PropTypes.string,
+		enableRowSelect: React.PropTypes.bool,
+		rowSelectValue: React.PropTypes.string,
     numberOfRows: React.PropTypes.number,
     children: React.PropTypes.any
-  },
-
-  onAddRow() {
-    //if (this.props.onAddRow !== null && this.props.onAddRow instanceof Function) {
-    //  this.props.onAddRow({newRowIndex: this.props.numberOfRows});
-    //}
-      this.props.onAddRow({ newRowIndex: 0 });
   },
 
   getDefaultProps() {
     return {
       enableAddRow: false,
       addRowButtonText: 'Add Row',
+			enableDeleteRow: false,
+      deleteRowButtonText: 'Delete Row',
       enableFilter: false,
       filterRowsButtonText: 'Default Filter Rows Button Name',
 	  enableRowSelect: false,
     };
+  },
+
+  renderToggleFilterButton() {
+    if (this.props.enableFilter) {
+      return (<button type="button" className="btn" onClick={this.props.onToggleFilter}>
+        {this.props.filterRowsButtonText}
+    </button>);
+    }
+  },
+	
+  onAddRow() {
+    //if (this.props.onAddRow !== null && this.props.onAddRow instanceof Function) {
+    //  this.props.onAddRow({newRowIndex: this.props.numberOfRows});
+    //}
+      this.props.onAddRow({ newRowIndex: 0 });
   },
 
   renderAddRowButton() {
@@ -42,11 +56,12 @@ const Toolbar = React.createClass({
     }
   },
 
-  renderToggleFilterButton() {
-    if (this.props.enableFilter) {
-      return (<button type="button" className="btn" onClick={this.props.onToggleFilter}>
-        {this.props.filterRowsButtonText}
-    </button>);
+	renderDeleteRowButton() {
+    if (this.props.enableDeleteRow) {
+			let buttonToggleStr = (this.props.selectedRows && this.props.selectedRows.length > 0) ? "" : "Disabled";
+      return (<button type="button" className="btn" disabled={buttonToggleStr} onClick={this.props.onDeleteRow}>
+        {this.props.deleteRowButtonText}
+      </button>);
     }
   },
 
@@ -65,10 +80,11 @@ const Toolbar = React.createClass({
   renderRowSelectDropdown() {
     if (this.props.enableRowSelect) {
       return (<select className="select" value={this.props.rowSelectValue} onChange={this.props.onRowSelectDropdownChange}>
-        <option value="multiple">Multiple Select</option>
-		<option value="single">Single Select</option>
-		<option value="none">No Select</option>
-    </select>);
+								<option value="multiple">Multiple Select</option>
+								<option value="single">Single Select</option>
+								<option value="none">No Select</option>
+							</select>
+			);
     }
   },
   
@@ -76,9 +92,10 @@ const Toolbar = React.createClass({
     return (
       <div className="react-grid-Toolbar">
         <div className="tools">
-          {this.renderAddRowButton()}
           {this.renderToggleFilterButton()}
-		  {this.renderRowSelectDropdown()}
+					{this.renderAddRowButton()}
+					{this.renderDeleteRowButton()}
+					{this.renderRowSelectDropdown()}
           {this.props.children}
         </div>
       </div>);
