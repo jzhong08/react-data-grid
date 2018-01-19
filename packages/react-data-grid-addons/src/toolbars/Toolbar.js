@@ -93,13 +93,11 @@ const Toolbar = React.createClass({
   render() {
     return (
       <div className="react-grid-Toolbar">
-        <div className="tools">
-          {this.renderToggleFilterButton()}
-					{this.renderAddRowButton()}
-					{this.renderDeleteRowButton()}
-					{this.renderRowSelectDropdown()}
-          {this.props.children}
-        </div>
+				{this.renderToggleFilterButton()}
+				{this.renderAddRowButton()}
+				{this.renderDeleteRowButton()}
+				{this.renderRowSelectDropdown()}
+				{this.props.children}
       </div>);
   }
 });

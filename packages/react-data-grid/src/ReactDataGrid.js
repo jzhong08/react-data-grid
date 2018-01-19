@@ -994,22 +994,22 @@ const ReactDataGrid = React.createClass({
   },
 
   renderToolbar(): ReactElement {
-    let Toolbar = this.props.toolbar;
-	let filterRowsButtonText = this.state.canFilter ? "Hide Filter" : "Show Filter";
+    let toolbar = this.props.toolbar;
+		let filterRowsButtonText = this.state.canFilter ? "Hide Filter" : "Show Filter";
     let toolBarProps =  {
-	  columns: this.props.columns,
-		onDeleteRow: this.onDeleteRow,
-		selectedRows: this.state.selectedRows,
-	  onToggleFilter: this.onToggleFilter,
-	  filterRowsButtonText: filterRowsButtonText,
-	  onRowSelectDropdownChange: this.onRowSelectDropdownChange,
-	  rowSelectValue: this.state.rowSelectValue,
-	  numberOfRows: this.props.rowsCount
-	};
-    if (React.isValidElement(Toolbar)) {
-      return ( React.cloneElement(Toolbar, toolBarProps));
-    } else if (isFunction(Toolbar)) {
-      return <Toolbar {...toolBarProps}/>;
+			//columns: this.props.columns,
+			onDeleteRow: this.onDeleteRow,
+			selectedRows: this.state.selectedRows,
+			onToggleFilter: this.onToggleFilter,
+			filterRowsButtonText: filterRowsButtonText,
+			onRowSelectDropdownChange: this.onRowSelectDropdownChange,
+			rowSelectValue: this.state.rowSelectValue,
+			//numberOfRows: this.props.rowsCount
+		};
+    if (React.isValidElement(toolbar)) {
+      return ( React.cloneElement(toolbar, toolBarProps));
+    } else if (isFunction(toolbar)) {
+      return <toolbar {...toolBarProps}/>;
     }
   },
 
