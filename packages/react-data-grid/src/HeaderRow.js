@@ -126,7 +126,7 @@ const HeaderRow = React.createClass({
       let cell = (
         <HeaderCell
           ref={(node) => this.cells[i] = node}
-          key={i}
+          key={column.key}
           height={this.props.height}
           column={column}
           renderer={_renderer}

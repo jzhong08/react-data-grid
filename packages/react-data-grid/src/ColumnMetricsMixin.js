@@ -52,7 +52,7 @@ module.exports = {
     if (nextProps.columns) {
       if (!ColumnMetrics.sameColumns(this.props.columns, nextProps.columns, this.props.columnEquality) ||
           nextProps.minWidth !== this.props.minWidth) {
-        let columnMetrics = this.createColumnMetrics(this.state.rowSelectValue, nextProps);
+        let columnMetrics = this.createColumnMetrics(this.state.rowSelectValue, false, nextProps);
         this.setState({columnMetrics: columnMetrics});
       }
     }

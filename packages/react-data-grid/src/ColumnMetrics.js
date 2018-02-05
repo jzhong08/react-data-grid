@@ -120,11 +120,16 @@ function compareEachColumn(prevColumns: Array<Column>, nextColumns: Array<Column
   let prevColumnsByKey: { [key:string]: Column } = {};
   let nextColumnsByKey: { [key:string]: Column } = {};
 
-
+	// Check the sizes of column arrays.
   if (ColumnUtils.getSize(prevColumns) !== ColumnUtils.getSize(nextColumns)) {
     return false;
   }
 
+	// Check the orders of elements in column arrays.
+	if (Array.from(prevColumns, elem => elem.key).join() !== Array.from(nextColumns, elem => elem.key).join()) {
+		return false;
+	}
+	
   for (i = 0, len = ColumnUtils.getSize(prevColumns); i < len; i++) {
     column = prevColumns[i];
     prevColumnsByKey[column.key] = column;

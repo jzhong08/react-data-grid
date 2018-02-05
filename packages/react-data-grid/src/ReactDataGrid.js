@@ -402,7 +402,10 @@ const ReactDataGrid = React.createClass({
   },
   
   onRowSelectDropdownChange(event) {
-	  this.metricsUpdated(event.target.value);
+		// Only do the update if a different value is selected from the current rowSelectValue.
+    if (event.target.value !== this.state.rowSelectValue) {
+			this.metricsUpdated(event.target.value);
+    }
   },
 
   onDragHandleDoubleClick(e) {
@@ -927,11 +930,6 @@ const ReactDataGrid = React.createClass({
  // },
 
   setupGridColumns: function(rowSelectValue, allRowsSelected, props) {
-		// No need to check if rowSelectValue has changed because the grid columns need to generate from scratch (props.columns) anyway.
-    //if (rowSelectValue === this.state.rowSelectValue) {
-    //  return props.columns; // This would be wrong if rowSelectValue is not 'none'.
-    //}
-
 		// Cannot keep multiple selected rows when changed to single selection (from either none or multiple). 
 		// So ask users to confirm. If confirmed, clear all selected rows.
 		if (rowSelectValue === 'single' && this.getSelectedRows().length > 1) {
@@ -997,14 +995,14 @@ const ReactDataGrid = React.createClass({
     let toolbar = this.props.toolbar;
 		let filterRowsButtonText = this.state.canFilter ? "Hide Filter" : "Show Filter";
     let toolBarProps =  {
-			//columns: this.props.columns,
+			columns: this.props.columns,
 			onDeleteRow: this.onDeleteRow,
 			selectedRows: this.state.selectedRows,
 			onToggleFilter: this.onToggleFilter,
 			filterRowsButtonText: filterRowsButtonText,
 			onRowSelectDropdownChange: this.onRowSelectDropdownChange,
 			rowSelectValue: this.state.rowSelectValue,
-			//numberOfRows: this.props.rowsCount
+			numberOfRows: this.props.rowsCount
 		};
     if (React.isValidElement(toolbar)) {
       return ( React.cloneElement(toolbar, toolBarProps));
@@ -1042,6 +1040,7 @@ const ReactDataGrid = React.createClass({
     };
 
     let toolbar = this.renderToolbar();
+		
     //let containerWidth = this.props.minWidth || this.DOMMetrics.gridWidth();
 		let containerWidth = this.state.columnMetrics.totalWidth || this.DOMMetrics.gridWidth();
     let gridWidth = containerWidth - this.state.scrollOffset;
@@ -1058,7 +1057,7 @@ const ReactDataGrid = React.createClass({
 		
     return (
       <div className="react-grid-Container" style={{width: containerWidth}}>
-        {toolbar}
+				{toolbar}
         <div className="react-grid-Main">
           <BaseGrid
             ref={(node) => this.base = node}
@@ -1088,11 +1087,10 @@ const ReactDataGrid = React.createClass({
             rowScrollTimeout={this.props.rowScrollTimeout}
             contextMenu={this.props.contextMenu}
             overScan={this.props.overScan} />
-          </div>
         </div>
-      );
+      </div>
+    );
   }
 });
-
 
 module.exports = ReactDataGrid;
