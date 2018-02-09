@@ -76,6 +76,7 @@ const ReactDataGrid = React.createClass({
     rowKey: React.PropTypes.string,
     rowScrollTimeout: React.PropTypes.number,
 		deleteSelectedRows: React.PropTypes.func,
+		saveSelectedRows: React.PropTypes.func,
     onClearFilters: React.PropTypes.func,
     contextMenu: React.PropTypes.element,
     cellNavigationMode: React.PropTypes.oneOf(['none', 'loopOverRow', 'changeRow']),
@@ -388,6 +389,18 @@ const ReactDataGrid = React.createClass({
     }
 		else {
 			alert("this.props.deleteSelectedRows is not defined.")
+		}
+	},
+	
+	onSaveRow() {
+		if (this.props.saveSelectedRows) {
+			// No need to check if there are selected rows; otherwise the Save Row button is disabled.
+			if (window.confirm('Are you sure to save ' + this.getSelectedRows().length + ' selected rows?') == true) {
+				this.props.saveSelectedRows(this.getSelectedRows());
+			}
+    }
+		else {
+			alert("this.props.saveSelectedRows is not defined.")
 		}
 	},
 
@@ -997,6 +1010,7 @@ const ReactDataGrid = React.createClass({
     let toolBarProps =  {
 			columns: this.props.columns,
 			onDeleteRow: this.onDeleteRow,
+			onSaveRow: this.onSaveRow,
 			selectedRows: this.state.selectedRows,
 			onToggleFilter: this.onToggleFilter,
 			filterRowsButtonText: filterRowsButtonText,

@@ -11,6 +11,9 @@ const Toolbar = React.createClass({
 		enableDeleteRow: React.PropTypes.bool,
 		deleteRowButtonText: React.PropTypes.string,
 		onDeleteRow: React.PropTypes.func,
+		enableSaveRow: React.PropTypes.bool,
+		saveRowButtonText: React.PropTypes.string,
+		onSaveRow: React.PropTypes.func,
 		selectedRows: React.PropTypes.array,
     enableFilter: React.PropTypes.bool,
 		filterRowsButtonText: React.PropTypes.string,
@@ -27,6 +30,8 @@ const Toolbar = React.createClass({
       addRowButtonText: 'Add Row',
 			enableDeleteRow: false,
       deleteRowButtonText: 'Delete Row',
+			enableSaveRow: false,
+      saveRowButtonText: 'Save Row',
       enableFilter: false,
       filterRowsButtonText: 'Default Filter Rows Button Name',
 	  enableRowSelect: false,
@@ -66,6 +71,17 @@ const Toolbar = React.createClass({
 				</button>);
     }
   },
+	
+	renderSaveRowButton() {
+    if (this.props.enableSaveRow) {
+			let buttonToggleStr = (this.props.selectedRows && this.props.selectedRows.filter(elem => elem.isSelected).length > 0) ? "" : "Disabled"; 
+			// Empty string set to disabled attribute enables the button.
+      return (
+				<button type="button" className="btn" disabled={buttonToggleStr} onClick={this.props.onSaveRow}>
+					{this.props.saveRowButtonText}
+				</button>);
+    }
+  },
 
   //renderRowSelectDropdown() {
   //  if (this.props.enableRowSelect) {
@@ -96,6 +112,7 @@ const Toolbar = React.createClass({
 				{this.renderToggleFilterButton()}
 				{this.renderAddRowButton()}
 				{this.renderDeleteRowButton()}
+				{this.renderSaveRowButton()}
 				{this.renderRowSelectDropdown()}
 				{this.props.children}
       </div>);

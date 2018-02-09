@@ -10,6 +10,7 @@ const AdvancedToolbar = React.createClass({
         onColumnGroupDeleted: React.PropTypes.func.isRequired,
         onAddRow: React.PropTypes.func.isRequired,
         onDeleteRow: React.PropTypes.func,
+				onSaveRow: React.PropTypes.func,
         selectedRows: React.PropTypes.array,
         onToggleFilter: React.PropTypes.func,
         filterRowsButtonText: React.PropTypes.string,
@@ -29,6 +30,8 @@ const AdvancedToolbar = React.createClass({
 							onAddRow={this.props.onAddRow}
 							enableDeleteRow={true}
 							onDeleteRow={this.props.onDeleteRow}
+							enableSaveRow={true}
+							onSaveRow={this.props.onSaveRow}
 							selectedRows={this.props.selectedRows}
 							enableFilter={true}
 							filterRowsButtonText={this.props.filterRowsButtonText}
