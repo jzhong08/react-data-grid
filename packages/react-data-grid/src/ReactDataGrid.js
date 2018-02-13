@@ -64,6 +64,7 @@ const ReactDataGrid = React.createClass({
     toolbar: React.PropTypes.element,
     enableCellSelect: React.PropTypes.bool,
     columns: React.PropTypes.oneOfType([React.PropTypes.object, React.PropTypes.array]).isRequired,
+		columnSets: React.PropTypes.array,
     onFilter: React.PropTypes.func,
     onCellCopyPaste: React.PropTypes.func,
     onCellsDragged: React.PropTypes.func,
@@ -153,8 +154,9 @@ const ReactDataGrid = React.createClass({
 	}
 	{
     //let columnMetrics = this.createColumnMetrics();
-		let columnMetrics = this.getColumnMetricsType({
-      columns: this.props.columns,
+		let columnMetrics = this.updateColumnMetrics({
+			columnSets: this.props.columnSets,
+			columns: this.props.columns,
       minColumnWidth: this.props.minColumnWidth,
       totalWidth: this.props.minWidth
     });
@@ -699,6 +701,13 @@ const ReactDataGrid = React.createClass({
 
   getHeaderRows(): Array<{ref: Function; height: number;}> {
     let rows = [{ ref: (node) => this.row = node, height: this.props.headerRowHeight || this.props.rowHeight, rowType: 'header' }];
+		if (this.props.columnSets != null) {
+			rows.unshift({
+        ref: (node) => this.row = node,
+        height: this.props.headerRowHeight || this.props.rowHeight,
+        rowType: 'headerGroup'
+      });
+		}
     if (this.state.canFilter === true) {
       rows.push({
         ref: (node) => this.filterRow = node,
@@ -942,6 +951,29 @@ const ReactDataGrid = React.createClass({
  //   return this._cachedComputedColumns;
  // },
 
+  createSelectColumn(showCheckbox, allRowsSelected, props) {
+		let headerRenderer = showCheckbox ? 
+			<div className="react-grid-checkbox-container checkbox-align">
+				<input checked={allRowsSelected} className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => 		this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
+				<label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
+			</div> : null;
+		let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
+		let selectColumn = {
+			key: 'select-row',
+			name: '',
+			formatter: <Formatter rowSelection={this.props.rowSelection} />,
+			onCellChange: this.handleRowSelect,
+			filterable: false,
+			headerRenderer: headerRenderer,
+			width: props.rowSelectColumnWidth,
+			locked: true,
+			getRowMetaData: (rowData) => rowData,
+			cellClass: this.props.rowActionsCell ? 'rdg-row-actions-cell' : ''
+		}
+		
+		return selectColumn;
+	},
+	
   setupGridColumns: function(rowSelectValue, allRowsSelected, props) {
 		// Cannot keep multiple selected rows when changed to single selection (from either none or multiple). 
 		// So ask users to confirm. If confirmed, clear all selected rows.
@@ -967,32 +999,17 @@ const ReactDataGrid = React.createClass({
 		}
 		
     if (rowSelectValue === 'none') {
-      return { rowSelectValue : rowSelectValue, columns : props.columns };
+      return { rowSelectValue: rowSelectValue, columns: props.columns, columnSets: props.columnSets };
     }
 		else {
 			// Create the row select column.
 			let columnsNew = props.columns.slice(0);
-			let headerRenderer = rowSelectValue === 'single' ? null :
-				<div className="react-grid-checkbox-container checkbox-align">
-					<input checked={allRowsSelected} className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => 		this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
-					<label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
-				</div>;
-			let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
-			let selectColumn = {
-				key: 'select-row',
-				name: '',
-				formatter: <Formatter rowSelection={this.props.rowSelection} />,
-				onCellChange: this.handleRowSelect,
-				filterable: false,
-				headerRenderer: headerRenderer,
-				width: props.rowSelectColumnWidth,
-				locked: true,
-				getRowMetaData: (rowData) => rowData,
-				cellClass: this.props.rowActionsCell ? 'rdg-row-actions-cell' : ''
-			}
-			columnsNew.unshift(selectColumn);
+			columnsNew.unshift(this.createSelectColumn(rowSelectValue === 'multiple', allRowsSelected, props));
+			
+			let columnSetsNew = props.columnSets.slice(0);
+			columnSetsNew.unshift(this.createSelectColumn(false, allRowsSelected, props));
 		
-			return { rowSelectValue : rowSelectValue, columns : columnsNew };;
+			return { rowSelectValue: rowSelectValue, columns: columnsNew, columnSets: columnSetsNew };;
 		}
   },
 

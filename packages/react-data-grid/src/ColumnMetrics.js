@@ -11,6 +11,7 @@ type Column = {
 };
 
 type ColumnMetricsType = {
+		columnSets: Array<Column>;
     columns: Array<Column>;
     totalWidth: number;
     minColumnWidth: number;
@@ -49,12 +50,17 @@ function setDefferedColumnWidths(columns, unallocatedWidth, minColumnWidth) {
 }
 
 function setColumnOffsets(columns) {
-  let left = 0;
-  return columns.map(column => {
-    column.left = left;
-    left += column.width;
-    return column;
-  });
+	if (columns != null) {
+		let left = 0;
+		return columns.map(column => {
+			column.left = left;
+			left += column.width;
+			return column;
+		});
+	}
+	else {
+		return null;
+	}
 }
 
 /**
@@ -78,10 +84,25 @@ function recalculate(metrics: ColumnMetricsType): ColumnMetricsType {
   // compute width for columns which doesn't specify width
   columns = setDefferedColumnWidths(columns, unallocatedWidth, metrics.minColumnWidth);
 
-  // compute left offset
+  // compute left offset for columns
   columns = setColumnOffsets(columns);
 
+	// update column group width based on the new column widths.
+	for (let columnSet of metrics.columnSets) {
+		if (columnSet['columnKeys']) { // "select-row" column does not have 'columnKeys' attribute.
+			columnSet['width'] = 0;
+			for (let columnKey of columnSet['columnKeys']) {
+				let column = columns.filter(elem => elem['key'] === columnKey)[0];
+				columnSet['width'] += column['width'];
+			}
+		}
+	}
+				
+	// compute left offset for columnSets
+	let columnSets = setColumnOffsets(metrics.columnSets);
+	
   return {
+		columnSets,
     columns,
     width,
     totalWidth: metrics.totalWidth,

@@ -6,6 +6,7 @@
     font-weight: normal;
     line-height: 1.5; /* If Placeholder of the input is moved up, rem/modify this. */
     border-radius: 3px;
+    border: 0px solid #fff;
 }
 
 .react-grid-Header {
@@ -32,7 +33,7 @@
   font-size: 11px;
   font-family: Arial;
   text-align: center;
-  border-right: 1px solid #dddddd;
+  border-right: 1px solid #696969;
   border-bottom: 1px solid #dddddd;
 }
 .react-grid-HeaderCell__value {
@@ -69,7 +70,7 @@
 
 .react-grid-HeaderCell .Select-control {
     max-height: 18px;
-    border: 1px solid #cccccc;
+    border: 1px solid #ffffff;
     color: #555;
     border-radius: 3px;
 }

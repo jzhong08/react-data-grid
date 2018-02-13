@@ -13,6 +13,7 @@ class Column {
 }
 
 type ColumnMetricsType = {
+	columnSets: Array<Column>;
 	columns: Array<Column>;
 	totalWidth: number;
 	minColumnWidth: number;
@@ -68,12 +69,13 @@ module.exports = {
     return totalWidth;
   },
 
-  getColumnMetricsType(metrics: ColumnMetricsType): { columns: ColumnMetricsType } {
-    let totalWidth = metrics.totalWidth || this.getTotalWidth();
+  updateColumnMetrics(metricsOld: ColumnMetricsType): ColumnMetricsType {
+    let totalWidth = metricsOld.totalWidth || this.getTotalWidth();
     let currentMetrics = {
-      columns: metrics.columns,
+			columnSets: metricsOld.columnSets,
+      columns: metricsOld.columns,
       totalWidth: totalWidth,
-      minColumnWidth: metrics.minColumnWidth
+      minColumnWidth: metricsOld.minColumnWidth
     };
     let updatedMetrics = ColumnMetrics.recalculate(currentMetrics);
     return updatedMetrics;
@@ -115,7 +117,8 @@ module.exports = {
 			totalWidthNew -= props.rowSelectColumnWidth;
 		}
 	
-    return this.getColumnMetricsType({
+    return this.updateColumnMetrics({
+			columnSets: result.columnSets,
       columns: result.columns,
       minColumnWidth: this.props.minColumnWidth,
       totalWidth: totalWidthNew

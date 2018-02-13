@@ -89,6 +89,7 @@ const Header = React.createClass({
       resizeColumn = this.state.resizing.column;
     }
     let headerRows = [];
+		this.headerRowComponents = [];
     this.props.headerRows.forEach((row, index) => {
       // To allow header filters to be visible
       let rowHeight = 'auto';
@@ -108,14 +109,18 @@ const Header = React.createClass({
 
       headerRows.push(<HeaderRow
         key={row.ref}
-        ref={(node) => { return row.rowType === 'filter' ? this.filterRow = node : this.row = node; }}
+        ref={(node) => { 
+						//return row.rowType === 'filter' ? this.filterRow = node : this.row = node;
+						this.headerRowComponents.push(node);
+					}
+				}
         rowType={row.rowType}
         style={headerRowStyle}
         onColumnResize={this.onColumnResize}
         onColumnResizeEnd={this.onColumnResizeEnd}
         width={columnMetrics.width}
         height={row.height || this.props.height}
-        columns={columnMetrics.columns}
+        columns={ row.rowType === 'headerGroup' ? columnMetrics.columnSets : columnMetrics.columns }
         resizing={resizeColumn}
         draggableHeaderCell={this.props.draggableHeaderCell}
         filterable={row.filterable}
@@ -172,15 +177,25 @@ const Header = React.createClass({
     };
   },
 
-  setScrollLeft(scrollLeft: number) {
-    let node = ReactDOM.findDOMNode(this.row);
-    node.scrollLeft = scrollLeft;
-    this.row.setScrollLeft(scrollLeft);
-    if (this.filterRow) {
-      let nodeFilters = ReactDOM.findDOMNode(this.filterRow);
-      nodeFilters.scrollLeft = scrollLeft;
-      this.filterRow.setScrollLeft(scrollLeft);
-    }
+  //setScrollLeft(scrollLeft: number) {
+  //  let node = ReactDOM.findDOMNode(this.row);
+  //  node.scrollLeft = scrollLeft;
+  //  this.row.setScrollLeft(scrollLeft);
+  //  if (this.filterRow) {
+  //    let nodeFilters = ReactDOM.findDOMNode(this.filterRow);
+  //    nodeFilters.scrollLeft = scrollLeft;
+  //    this.filterRow.setScrollLeft(scrollLeft);
+  //  }
+  //},
+	
+	setScrollLeft(scrollLeft: number) {
+    for (let headerRowComponent of this.headerRowComponents) {
+			if (headerRowComponent != null) { // Not sure how, but two null components are added to this.headerRowComponents.
+				let node = ReactDOM.findDOMNode(headerRowComponent);
+				node.scrollLeft = scrollLeft;
+				headerRowComponent.setScrollLeft(scrollLeft);
+			}
+		}
   },
 
   getKnownDivProps() {
