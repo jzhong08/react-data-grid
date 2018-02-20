@@ -13,6 +13,7 @@ type Column = {
 type ColumnMetricsType = {
 		columnSets: Array<Column>;
     columns: Array<Column>;
+		allRowsSelected: boolean;
     totalWidth: number;
     minColumnWidth: number;
 };
@@ -87,23 +88,26 @@ function recalculate(metrics: ColumnMetricsType): ColumnMetricsType {
   // compute left offset for columns
   columns = setColumnOffsets(columns);
 
-	// update column group width based on the new column widths.
-	for (let columnSet of metrics.columnSets) {
-		if (columnSet['columnKeys']) { // "select-row" column does not have 'columnKeys' attribute.
-			columnSet['width'] = 0;
-			for (let columnKey of columnSet['columnKeys']) {
-				let column = columns.filter(elem => elem['key'] === columnKey)[0];
-				columnSet['width'] += column['width'];
+	if (metrics.columnSets != null) {
+		// update column set width based on the new column widths.
+		for (let columnSet of metrics.columnSets) {
+			if (columnSet['columnKeys']) { // "select-row" column does not have 'columnKeys' attribute.
+				columnSet['width'] = 0;
+				for (let columnKey of columnSet['columnKeys']) {
+					let column = columns.filter(elem => elem['key'] === columnKey)[0];
+					columnSet['width'] += column['width'];
+				}
 			}
 		}
 	}
-				
+	
 	// compute left offset for columnSets
 	let columnSets = setColumnOffsets(metrics.columnSets);
 	
   return {
 		columnSets,
     columns,
+		allRowsSelected: metrics.allRowsSelected,
     width,
     totalWidth: metrics.totalWidth,
     minColumnWidth: metrics.minColumnWidth
@@ -183,4 +187,9 @@ function sameColumns(prevColumns: Array<Column>, nextColumns: Array<Column>, isS
   return compareEachColumn(prevColumns, nextColumns, isSameColumn);
 }
 
-module.exports = { recalculate, resizeColumn, sameColumn, sameColumns };
+function sameColumnMetrics(prevMetrics, nextMetrics) {
+	return (prevMetrics.allRowsSelected === nextMetrics.allRowsSelected) &&
+		sameColumns(prevMetrics.columns, nextMetrics.columns, sameColumn)
+}
+
+module.exports = { recalculate, resizeColumn, sameColumn, sameColumns, sameColumnMetrics };

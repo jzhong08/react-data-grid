@@ -44,7 +44,8 @@ const Header = React.createClass({
   },
 
   shouldComponentUpdate: function(nextProps: any, nextState: any): boolean {
-    let update =  !(ColumnMetrics.sameColumns(this.props.columnMetrics.columns, nextProps.columnMetrics.columns, ColumnMetrics.sameColumn))
+    //let update =  !(ColumnMetrics.sameColumns(this.props.columnMetrics.columns, nextProps.columnMetrics.columns, ColumnMetrics.sameColumn))
+		let update = !ColumnMetrics.sameColumnMetrics(this.props.columnMetrics, nextProps.columnMetrics)
     || this.props.totalWidth !== nextProps.totalWidth
     || (this.props.headerRows.length !== nextProps.headerRows.length)
     || (this.state.resizing !== nextState.resizing)

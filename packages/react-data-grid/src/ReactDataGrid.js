@@ -127,7 +127,7 @@ const ReactDataGrid = React.createClass({
       rowHeight: 35,
       headerFiltersHeight: 45,
       minHeight: 350,
-	  rowSelectColumnWidth: 30,
+			rowSelectColumnWidth: 30,
       rowKey: 'id',
       rowScrollTimeout: 0,
       cellNavigationMode: 'none',
@@ -157,6 +157,7 @@ const ReactDataGrid = React.createClass({
 		let columnMetrics = this.updateColumnMetrics({
 			columnSets: this.props.columnSets,
 			columns: this.props.columns,
+			allRowsSelected: false,
       minColumnWidth: this.props.minColumnWidth,
       totalWidth: this.props.minWidth
     });
@@ -385,8 +386,9 @@ const ReactDataGrid = React.createClass({
 			// No need to check if there are selected rows; otherwise the Delete Row button is disabled.
 			if (window.confirm('Are you sure to delete ' + this.getSelectedRows().length + ' selected rows?') == true) {
 				this.props.deleteSelectedRows(this.getSelectedRows());
-				this.setState({ selectedRows : [] });
-				this.metricsUpdated(this.state.rowSelectValue, false); // Reset multi-select box to un-checked if all rows are selected and then deleted.
+				// Reset multi-select box to un-checked if all rows are selected and then deleted.
+				let columnMetricsNew = this.createColumnMetrics(this.state.rowSelectValue, this.props, false);
+				this.setState({selectedRows: [], columnMetrics: columnMetricsNew});
 			}
     }
 		else {
@@ -419,7 +421,9 @@ const ReactDataGrid = React.createClass({
   onRowSelectDropdownChange(event) {
 		// Only do the update if a different value is selected from the current rowSelectValue.
     if (event.target.value !== this.state.rowSelectValue) {
-			this.metricsUpdated(event.target.value);
+			//this.metricsUpdated(event.target.value);
+			let columnMetrics = this.createColumnMetrics(event.target.value, this.props, this.state.columnMetrics.allRowsSelected);
+			this.setState({columnMetrics});
     }
   },
 
@@ -676,11 +680,8 @@ const ReactDataGrid = React.createClass({
         let row = Object.assign({}, this.props.rowGetter(i), {isSelected: allRowsSelected});
         selectedRows.push(row);
       }
-      this.setState({selectedRows: selectedRows});
-			this.metricsUpdated(this.state.rowSelectValue, allRowsSelected);
-      if (typeof this.props.onRowSelect === 'function') {
-        this.props.onRowSelect(selectedRows.filter(r => r.isSelected === true));
-      }
+			let columnMetricsNew = this.createColumnMetrics(this.state.rowSelectValue, this.props, allRowsSelected);
+			this.setState({selectedRows: selectedRows, columnMetrics: columnMetricsNew})
     //}
   },
 
@@ -951,10 +952,10 @@ const ReactDataGrid = React.createClass({
  //   return this._cachedComputedColumns;
  // },
 
-  createSelectColumn(showCheckbox, allRowsSelected, props) {
+  createSelectColumn(showCheckbox, props, allRowsSelected) {
 		let headerRenderer = showCheckbox ? 
 			<div className="react-grid-checkbox-container checkbox-align">
-				<input checked={allRowsSelected} className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={grid => 		this.selectAllCheckbox = grid} onChange={this.handleCheckboxChange} />
+				<input checked={allRowsSelected} className="react-grid-checkbox" type="checkbox" name="select-all-checkbox" id="select-all-checkbox" ref={node => this.selectAllCheckbox = node} onChange={this.handleCheckboxChange} />
 				<label htmlFor="select-all-checkbox" className="react-grid-checkbox-label"></label>
 			</div> : null;
 		let Formatter = this.props.rowActionsCell ? this.props.rowActionsCell : CheckboxEditor;
@@ -974,7 +975,7 @@ const ReactDataGrid = React.createClass({
 		return selectColumn;
 	},
 	
-  setupGridColumns: function(rowSelectValue, allRowsSelected, props) {
+  setupGridColumns: function(rowSelectValue, props, allRowsSelected) {
 		// Cannot keep multiple selected rows when changed to single selection (from either none or multiple). 
 		// So ask users to confirm. If confirmed, clear all selected rows.
 		if (rowSelectValue === 'single' && this.getSelectedRows().length > 1) {
@@ -987,6 +988,7 @@ const ReactDataGrid = React.createClass({
 			//onCancel = { () => alert('Canceled') }
 			///>
 			if (window.confirm('Change to Single Row selection? All ' + this.getSelectedRows().length + ' selected rows will be cleared.') == true) {
+				allRowsSelected = false; // In case it is all rows that are selected previously.
 				this.setState({ rowSelectValue : rowSelectValue, selected : {}, selectedRows : [] });
 			}
 			else {
@@ -998,18 +1000,29 @@ const ReactDataGrid = React.createClass({
 			this.setState({ rowSelectValue : rowSelectValue });
 		}
 		
+		// Remove existing row select column, if any.
+		let columnsNew = this.state.columnMetrics.columns.slice(0);
+		if (columnsNew.length > 1 && columnsNew[0].key === 'select-row') {
+			columnsNew.splice(0,1);
+		}
+		let columnSetsNew = this.state.columnMetrics.columnSets ? this.state.columnMetrics.columnSets.slice(0) : null;
+		if (columnSetsNew != null && columnSetsNew.length > 1 && columnSetsNew[0].key === 'select-row') {
+			columnSetsNew.splice(0,1);
+		}
+		
     if (rowSelectValue === 'none') {
-      return { rowSelectValue: rowSelectValue, columns: props.columns, columnSets: props.columnSets };
+			// No more row select column.
+      return { rowSelectValue: rowSelectValue, columns: columnsNew, columnSets: columnSetsNew, allRowsSelected: allRowsSelected };
     }
 		else {
 			// Create the row select column.
-			let columnsNew = props.columns.slice(0);
-			columnsNew.unshift(this.createSelectColumn(rowSelectValue === 'multiple', allRowsSelected, props));
+			columnsNew.unshift(this.createSelectColumn(rowSelectValue === 'multiple', props, allRowsSelected));
 			
-			let columnSetsNew = props.columnSets.slice(0);
-			columnSetsNew.unshift(this.createSelectColumn(false, allRowsSelected, props));
+			if (columnSetsNew != null) {
+				columnSetsNew.unshift(this.createSelectColumn(false, props, allRowsSelected));
+			}
 		
-			return { rowSelectValue: rowSelectValue, columns: columnsNew, columnSets: columnSetsNew };;
+			return { rowSelectValue: rowSelectValue, columns: columnsNew, columnSets: columnSetsNew, allRowsSelected: allRowsSelected };
 		}
   },
 

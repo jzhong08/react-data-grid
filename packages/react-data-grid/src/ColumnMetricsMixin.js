@@ -15,6 +15,7 @@ class Column {
 type ColumnMetricsType = {
 	columnSets: Array<Column>;
 	columns: Array<Column>;
+	allRowsSelected: boolean;
 	totalWidth: number;
 	minColumnWidth: number;
 };
@@ -53,7 +54,7 @@ module.exports = {
     if (nextProps.columns) {
       if (!ColumnMetrics.sameColumns(this.props.columns, nextProps.columns, this.props.columnEquality) ||
           nextProps.minWidth !== this.props.minWidth) {
-        let columnMetrics = this.createColumnMetrics(this.state.rowSelectValue, false, nextProps);
+        let columnMetrics = this.createColumnMetrics(this.state.rowSelectValue, nextProps, this.state.columnMetrics.allRowsSelected);
         this.setState({columnMetrics: columnMetrics});
       }
     }
@@ -74,6 +75,7 @@ module.exports = {
     let currentMetrics = {
 			columnSets: metricsOld.columnSets,
       columns: metricsOld.columns,
+			allRowsSelected: metricsOld.allRowsSelected,
       totalWidth: totalWidth,
       minColumnWidth: metricsOld.minColumnWidth
     };
@@ -99,13 +101,8 @@ module.exports = {
     }
   },
 
-  metricsUpdated(rowSelectValue = this.state.rowSelectValue, allRowsSelected = false) {
-    let columnMetrics = this.createColumnMetrics(rowSelectValue, allRowsSelected);
-    this.setState({columnMetrics});
-  },
-
-  createColumnMetrics(rowSelectValue, allRowsSelected = false, props = this.props) {
-		let result = this.setupGridColumns(rowSelectValue, allRowsSelected, props);
+  createColumnMetrics(rowSelectValue, props, allRowsSelected) {
+		let result = this.setupGridColumns(rowSelectValue, props, allRowsSelected);
 				
 		let totalWidthNew = this.state.columnMetrics.totalWidth;
 		
@@ -120,6 +117,7 @@ module.exports = {
     return this.updateColumnMetrics({
 			columnSets: result.columnSets,
       columns: result.columns,
+			allRowsSelected: result.allRowsSelected,
       minColumnWidth: this.props.minColumnWidth,
       totalWidth: totalWidthNew
     });
