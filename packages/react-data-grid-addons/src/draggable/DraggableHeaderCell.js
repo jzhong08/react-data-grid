@@ -67,7 +67,7 @@ const headerCellSource = {
       if (monitor.didDrop() && typeof monitor.getDropResult().source != "undefined") {
           const source = monitor.getDropResult().source;
           const targetKey = monitor.getDropResult().target;
-          return props.onHeaderDrop(source, targetKey);
+          return props.handleHeaderDrop(source, targetKey);
       }
       return props.column;
   }

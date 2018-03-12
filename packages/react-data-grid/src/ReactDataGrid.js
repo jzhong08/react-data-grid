@@ -528,6 +528,29 @@ const ReactDataGrid = React.createClass({
       this.props.onGridSort(columnKey, direction);
     });
   },
+	
+	handleHeaderDrop: function(source, target) {
+		let columns = this.state.columnMetrics.columns;
+		const columnSourceIndex = columns.findIndex(i => i.key === source);
+		const columnTargetIndex = columns.findIndex(i => i.key === target);
+
+		// Deep copy like this is not necessary. It actually causes null in retrieving style class in this.setState().
+		//let columnsCopy = JSON.parse(JSON.stringify(columns)); 
+		let columnsNew = columns.slice(0);
+		// Swap the source and target columns.
+		columnsNew.splice(columnTargetIndex, 0, columnsNew.splice(columnSourceIndex, 1)[0]);
+
+		let columnMetricsNew = {
+			columnSets: this.state.columnMetrics.columnSets,
+      columns: columnsNew,
+			allRowsSelected: this.state.columnMetrics.allRowsSelected,
+			width: this.state.columnMetrics.width,
+      totalWidth: this.state.columnMetrics.totalWidth,
+      minColumnWidth: this.state.columnMetrics.minColumnWidth
+    };
+		
+		//this.setState({ columnMetrics: columnMetricsNew });
+	},
 
   getSelectedRow(rows, key) {
     let selectedRow = rows.filter(r => {
@@ -1120,6 +1143,7 @@ const ReactDataGrid = React.createClass({
             sortColumn={this.state.sortColumn}
             sortDirection={this.state.sortDirection}
             onSort={this.handleSort}
+						handleHeaderDrop={this.handleHeaderDrop}
             minHeight={this.props.minHeight}
             totalWidth={gridWidth}
             onViewportKeydown={this.onKeyDown}

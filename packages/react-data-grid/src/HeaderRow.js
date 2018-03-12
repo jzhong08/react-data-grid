@@ -4,6 +4,7 @@ const BaseHeaderCell        = require('./HeaderCell');
 const getScrollbarSize  = require('./getScrollbarSize');
 const ExcelColumn  = require('./PropTypeShapes/ExcelColumn');
 const ColumnUtilsMixin  = require('./ColumnUtils');
+const ColumnMetrics       = require('./ColumnMetrics');
 const SortableHeaderCell    = require('./cells/headerCells/SortableHeaderCell');
 const FilterableHeaderCell  = require('./cells/headerCells/FilterableHeaderCell');
 const HeaderCellType = require('./HeaderCellType');
@@ -41,7 +42,7 @@ const HeaderRow = React.createClass({
     onScroll: PropTypes.func,
     rowType: PropTypes.string,
     draggableHeaderCell: PropTypes.func,
-    onHeaderDrop: PropTypes.func
+    handleHeaderDrop: PropTypes.func
   },
 
   mixins: [ColumnUtilsMixin],
@@ -54,7 +55,8 @@ const HeaderRow = React.createClass({
     return (
       nextProps.width !== this.props.width
       || nextProps.height !== this.props.height
-      || nextProps.columns !== this.props.columns
+    //  || nextProps.columns !== this.props.columns
+			|| !ColumnMetrics.sameColumns(nextProps.columns, this.props.columns, ColumnMetrics.sameColumn)
       || !shallowEqual(nextProps.style, this.props.style)
       || this.props.sortColumn !== nextProps.sortColumn
       || this.props.sortDirection !== nextProps.sortDirection
@@ -133,7 +135,7 @@ const HeaderRow = React.createClass({
           resizing={this.props.resizing === column}
           onResize={this.props.onColumnResize}
           onResizeEnd={this.props.onColumnResizeEnd}
-          onHeaderDrop={this.props.onHeaderDrop}
+          handleHeaderDrop={this.props.handleHeaderDrop}
           />
       );
       if (column.locked) {

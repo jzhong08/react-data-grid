@@ -139,6 +139,12 @@ function areColumnsImmutable(prevColumns: Array<Column>, nextColumns: Array<Colu
 }
 
 function compareEachColumn(prevColumns: Array<Column>, nextColumns: Array<Column>, isSameColumn: (a: Column, b: Column) => boolean) {
+	// null == null, undefined == undefined, and null == undefined all return true.
+	// array == array is transformed to array === array, which returns true only when they are the same object instance.
+	if (prevColumns == nextColumns) { 
+		return true;
+	}
+	
   let i;
   let len;
   let column;
@@ -189,6 +195,7 @@ function sameColumns(prevColumns: Array<Column>, nextColumns: Array<Column>, isS
 
 function sameColumnMetrics(prevMetrics, nextMetrics) {
 	return (prevMetrics.allRowsSelected === nextMetrics.allRowsSelected) &&
+		sameColumns(prevMetrics.columnSets, nextMetrics.columnSets, sameColumn) &&
 		sameColumns(prevMetrics.columns, nextMetrics.columns, sameColumn)
 }
 
